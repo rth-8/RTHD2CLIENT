@@ -1,0 +1,165 @@
+from PyQt6 import uic
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QSizePolicy
+from PyQt6.QtWebEngineWidgets import QWebEngineView
+from PyQt6.QtCore import QUrl
+
+import sys
+import os
+import json
+
+from my_secrets import MySecrets
+from my_oauth import MyOAuth
+from bungie_api import ComponentCharacter
+from user_data import UserData
+from character_data import CharacterData
+import pages
+
+API_ROOT = "https://www.bungie.net/Platform"
+
+USER_MEMBERSHIP_INFO = "User/GetMembershipsForCurrentUser/"
+USER_PROFILE = "{}/Destiny2/{}/Profile/{}/?components=100"
+
+CACHE_USER_MEMBERSHIP_INFO = "cache/membership_info"
+CACHE_USER_PROFILE = "cache/user_profile"
+CACHE_USER_CHARACTER1_INFO = "cache/character1_info"
+CACHE_USER_CHARACTER2_INFO = "cache/character2_info"
+CACHE_USER_CHARACTER3_INFO = "cache/character3_info"
+
+class MyMainWindow(QMainWindow):
+    def __init__(self):
+        QMainWindow.__init__(self)
+        self.setWindowTitle("RTH D2 client")
+        uic.loadUi("mainwindow.ui", self)
+
+        self.actionExit.triggered.connect(self.close)
+
+        self.webview = QWebEngineView()
+        self.webview.urlChanged.connect(self._url_changed)
+        self.webview.page().certificateError.connect(self._on_cert_error)
+        self.webview.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.webview)
+        self.frm_mid.setLayout(layout)
+
+        self.secrets = MySecrets()
+        self.oauth = MyOAuth(self.secrets)
+        self.userData = UserData()
+        self.charactersData = []
+
+        if not self.oauth.session.authorized:
+            link = self.oauth.start_oauth()
+            self.webview.load(QUrl(link))
+        else:
+            print("Session already authorized.")
+            try:
+                self._get_user_info()
+            except:
+                print("Something went wrong?!")
+                link = self.oauth.start_oauth()
+                self.webview.load(QUrl(link))
+                self._get_user_info()
+        
+        self._show_user_info()
+
+
+    def _url_changed(self, url):
+        resp_url = str(url.url())
+        print(f"NEW URL: {resp_url}")
+        if resp_url.startswith("http"):
+            self.edit_url.setText(resp_url)
+        self.oauth.get_and_store_token(resp_url)
+
+
+    def _on_cert_error(self, e):
+        print(f"cert error: {e.description()}")
+        print(f"type: {e.type()}")
+        print(f"overridable: {e.isOverridable()}")
+        print(f"url: {e.url()}")
+        for c in e.certificateChain():
+            print(c.toText())
+        e.acceptCertificate()
+
+
+    def _download(self, endpoint_url):
+        print(f"Download from {endpoint_url}...")
+        r = self.oauth.session.get(url=endpoint_url, headers={"X-API-Key": self.secrets.api_key})
+        print(f"Response status: {r.status_code}")
+        print(r.text)
+        return r.json()
+
+
+    def _download_and_save(self, endpoint_url, cache_file):
+        download = False
+        if not os.path.exists(cache_file):
+            download = True
+        else:
+            fstat = os.stat(cache_file)
+            if fstat.st_size == 0:
+                download = True
+        if download:
+            print(f"Download from {endpoint_url}...")
+            r = self.oauth.session.get(url=endpoint_url, headers={"X-API-Key": self.secrets.api_key})
+            print(f"Response status: {r.status_code}")
+            print(r.text)
+            json_data = r.json()
+            if r.status_code == 200 and json_data["ErrorStatus"] == "Success":
+                with open(cache_file, "w") as file:
+                    print(f"Saving {cache_file}...")
+                    json.dump(json_data, file)
+
+
+    def _load_from_cache(self, cache_file):
+        json_data = None
+        print(f"Load from {cache_file}...")
+        with open(cache_file, "r") as file:
+            json_data = json.load(file)
+        return json_data
+
+
+    def _get_user_info(self):
+        print("Get user membership info...")
+        url = f"{API_ROOT}/{USER_MEMBERSHIP_INFO}"
+        self._download_and_save(url, CACHE_USER_MEMBERSHIP_INFO)
+
+        d = self._load_from_cache(CACHE_USER_MEMBERSHIP_INFO)
+        if d:
+            self.userData.parse_user_info(d)
+            print("Get user profile...")
+            url = USER_PROFILE.format(API_ROOT, self.userData.membershipType, self.userData.membershipId)
+            self._download_and_save(url, CACHE_USER_PROFILE)
+
+        d = self._load_from_cache(CACHE_USER_PROFILE)
+        if d:
+            ch1id = d["Response"]["profile"]["data"]["characterIds"][0]
+            url = (f"{API_ROOT}/Destiny2/{self.userData.membershipType}/Profile/{self.userData.membershipId}/Character/{ch1id}/?components="
+                + str(ComponentCharacter.Characters.value) + "," 
+                + str(ComponentCharacter.CharacterEquipment.value) + "," 
+                + str(ComponentCharacter.CharacterInventories.value))
+            self._download_and_save(url, CACHE_USER_CHARACTER1_INFO)
+        
+        d = self._load_from_cache(CACHE_USER_CHARACTER1_INFO)
+        if d:
+            ch = CharacterData()
+            ch.emblemIconPath = d["Response"]["character"]["data"]["emblemPath"]
+            ch.emblemPicturePath = d["Response"]["character"]["data"]["emblemBackgroundPath"]
+            classHash = d["Response"]["character"]["data"]["classHash"]
+            url = f"{API_ROOT}/Destiny2/Manifest/DestinyClassDefinition/{classHash}/"
+            d = self._download(url)
+            if d:
+                ch.className = d["Response"]["displayProperties"]["name"]
+            self.charactersData.append(ch)
+
+
+    def _show_user_info(self):
+        self.webview.setHtml(pages.get_page_user_info(self.userData, self.charactersData))
+
+
+class MyUI:
+    def __init__(self) -> None:
+        print("Opening main window...")
+        app = QApplication(sys.argv)
+        window = MyMainWindow()
+        window.show()
+        app.exec()
+        print("Main window closed.")
