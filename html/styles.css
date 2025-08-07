@@ -1,0 +1,21 @@
+body {
+    background-color: black;
+}
+
+.profile_icon {
+    width: 115px;
+    height: 115px;
+}
+
+.display_name {
+    font-size: 1.2cm;
+    font-family: NeueHaasGroteskTextPro,-apple-system,BlinkMacSystemFont,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+}
+
+.display_name_color {
+    color: white;
+}
+
+.display_name_code_color {
+    color: #479ce4;
+}

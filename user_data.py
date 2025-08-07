@@ -5,6 +5,7 @@ class UserData:
         self.membershipType = None
         self.membershipId = None
         self.profilePicturePath = None
+        self.charactersCount = 0
 
     def parse_user_info(self, json_data):
         self.displayName = json_data["Response"]["destinyMemberships"][0]["bungieGlobalDisplayName"]

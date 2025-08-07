@@ -9,7 +9,7 @@ import json
 
 from my_secrets import MySecrets
 from my_oauth import MyOAuth
-from bungie_api import ComponentCharacter
+from bungie_api import ComponentCharacter, CharacterClass
 from user_data import UserData
 from character_data import CharacterData
 import pages
@@ -21,15 +21,13 @@ USER_PROFILE = "{}/Destiny2/{}/Profile/{}/?components=100"
 
 CACHE_USER_MEMBERSHIP_INFO = "cache/membership_info"
 CACHE_USER_PROFILE = "cache/user_profile"
-CACHE_USER_CHARACTER1_INFO = "cache/character1_info"
-CACHE_USER_CHARACTER2_INFO = "cache/character2_info"
-CACHE_USER_CHARACTER3_INFO = "cache/character3_info"
+CACHE_USER_CHARACTER_INFO = "cache/character_{}_info"
 
 class MyMainWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
-        self.setWindowTitle("RTH D2 client")
         uic.loadUi("mainwindow.ui", self)
+        self.setWindowTitle("RTH D2 client")
 
         self.actionExit.triggered.connect(self.close)
 
@@ -131,24 +129,27 @@ class MyMainWindow(QMainWindow):
 
         d = self._load_from_cache(CACHE_USER_PROFILE)
         if d:
-            ch1id = d["Response"]["profile"]["data"]["characterIds"][0]
-            url = (f"{API_ROOT}/Destiny2/{self.userData.membershipType}/Profile/{self.userData.membershipId}/Character/{ch1id}/?components="
-                + str(ComponentCharacter.Characters.value) + "," 
-                + str(ComponentCharacter.CharacterEquipment.value) + "," 
-                + str(ComponentCharacter.CharacterInventories.value))
-            self._download_and_save(url, CACHE_USER_CHARACTER1_INFO)
+            characterIds = d["Response"]["profile"]["data"]["characterIds"]
+            chidx = 0
+            for chid in characterIds:
+                print(f"Get character #{chidx}: {chid} ...")
+                url = (f"{API_ROOT}/Destiny2/{self.userData.membershipType}/Profile/{self.userData.membershipId}/Character/{chid}/?components="
+                    + str(ComponentCharacter.Characters.value) + "," 
+                    + str(ComponentCharacter.CharacterEquipment.value) + "," 
+                    + str(ComponentCharacter.CharacterInventories.value))
+                self._download_and_save(url, CACHE_USER_CHARACTER_INFO.format(chidx))
+                chidx = chidx + 1
         
-        d = self._load_from_cache(CACHE_USER_CHARACTER1_INFO)
-        if d:
-            ch = CharacterData()
-            ch.emblemIconPath = d["Response"]["character"]["data"]["emblemPath"]
-            ch.emblemPicturePath = d["Response"]["character"]["data"]["emblemBackgroundPath"]
-            classHash = d["Response"]["character"]["data"]["classHash"]
-            url = f"{API_ROOT}/Destiny2/Manifest/DestinyClassDefinition/{classHash}/"
-            d = self._download(url)
+        self.userData.charactersCount = chidx
+
+        for i in range(0, self.userData.charactersCount):
+            d = self._load_from_cache(CACHE_USER_CHARACTER_INFO.format(i))
             if d:
-                ch.className = d["Response"]["displayProperties"]["name"]
-            self.charactersData.append(ch)
+                ch = CharacterData()
+                ch.emblemIconPath = d["Response"]["character"]["data"]["emblemPath"]
+                ch.emblemPicturePath = d["Response"]["character"]["data"]["emblemBackgroundPath"]
+                ch.className = CharacterClass(d["Response"]["character"]["data"]["classType"]).name
+                self.charactersData.append(ch)
 
 
     def _show_user_info(self):

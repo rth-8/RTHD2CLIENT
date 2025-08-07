@@ -24,3 +24,10 @@ class ComponentCharacter(Enum):
     # This will return info about the equipped items on the character(s). Everyone can see this.
     CharacterEquipment=205
 
+
+class CharacterClass(Enum):
+    Titan=0	 
+    Hunter=1
+    Warlock=2
+    Unknown=3
+

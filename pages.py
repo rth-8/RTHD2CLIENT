@@ -3,20 +3,28 @@ from character_data import CharacterData
 
 BASE_URL = "https://www.bungie.net"
 
+
+def load_styles():
+    styles = ""
+    with open("html/styles.css", mode="r") as file:
+        styles = file.read()
+    return styles
+
+
 def get_page_user_info(userData: UserData, characterData: CharacterData):
     print("Create info page...")
-    print(f"Icon: {BASE_URL}/{userData.profilePicturePath}")
-
-    return f"""
-        <head>
-        </head>
-        <body>
-            <img src="{BASE_URL}/{userData.profilePicturePath}">
-            <h1>{userData.displayName}#{userData.displayNameCode}</h1>
-            <table>
-                <tr>
-                    <td>{characterData[0].className}</td><td><img src="{BASE_URL}/{characterData[0].emblemPicturePath}"></td>
-                </tr>
-            </table>
-        </body>
-    """
+    page = "<head></head><body><h1>:(</h1></body>"
+    with open("html/profile.html", mode="r") as file:
+        content = file.read()
+        profile_icon = f"{BASE_URL}/{userData.profilePicturePath}"
+        display_name = f"{userData.displayName}"
+        display_name_code = f"{userData.displayNameCode}"
+        character1_class = f"{characterData[0].className}"
+        character1_emblem = f"{BASE_URL}/{characterData[0].emblemPicturePath}"
+        character2_class = f"{characterData[1].className}"
+        character2_emblem = f"{BASE_URL}/{characterData[1].emblemPicturePath}"
+        character3_class = f"{characterData[2].className}"
+        character3_emblem = f"{BASE_URL}/{characterData[2].emblemPicturePath}"
+        styles = load_styles()
+        page = content.format(**locals())
+    return page
