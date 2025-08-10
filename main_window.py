@@ -63,11 +63,11 @@ class MyMainWindow(QMainWindow):
 
     def _url_changed(self, url):
         resp_url = str(url.url())
-        print(f"NEW URL: {resp_url}")
         if resp_url.startswith("http"):
+            print(f"NEW URL: {resp_url}")
             self.edit_url.setText(resp_url)
-        self.oauth.get_and_store_token(resp_url)
-
+            self.oauth.get_and_store_token(resp_url)
+    
 
     def _on_cert_error(self, e):
         print(f"cert error: {e.description()}")
