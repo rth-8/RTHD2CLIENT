@@ -4,29 +4,26 @@
 <style>{styles}</style>
 
 <body>
-<table>
-    <tr>
-        <td><img class="profile_icon" src="{profile_icon}"/></td>
-    </tr>
-    <tr>
-        <td>
-            <h2 class="display_name">
-                <span class="display_name_color">{display_name}</span>
-                <span class="display_name_code_color">#{display_name_code}</span>
-            </h2>
-        </td>
-    </tr>
-    <tr>
-        <td><span class="display_name_color">{character1_class}</span></td>
-        <td><img src="{character1_emblem}"/></td>
-    </tr>
-    <tr>
-        <td><span class="display_name_color">{character2_class}</span></td>
-        <td><img src="{character2_emblem}"/></td>
-    </tr>
-    <tr>
-        <td><span class="display_name_color">{character3_class}</span></td>
-        <td><img src="{character3_emblem}"/></td>
-    </tr>
-</table>
+    <div class="profile_container">
+        <img class="profile_icon" src="{profile_icon}"/>
+        <div class="display_name">
+            <span class="display_name_color">{display_name}</span><!-- remove unwanted space between 2 spans
+            --><span class="display_name_code_color">#{display_name_code}</span>
+        </div>
+    </div>
+
+    <div class="character_container">
+        <img src="{character1_emblem}"/>
+        <div class="character_class_name">{character1_class}</div>
+    </div>
+
+    <div class="character_container">
+        <img src="{character2_emblem}"/>
+        <div class="character_class_name">{character2_class}</div>
+    </div>
+
+    <div class="character_container">
+        <img src="{character3_emblem}"/>
+        <div class="character_class_name">{character3_class}</div>
+    </div>
 </body>

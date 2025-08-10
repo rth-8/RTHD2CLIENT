@@ -2,12 +2,22 @@ body {
     background-color: black;
 }
 
+/*******************************************************************/
+/* Profile */
+
+.profile_container {
+    position: relative;
+}
+
 .profile_icon {
     width: 115px;
     height: 115px;
 }
 
 .display_name {
+    position: absolute;
+    bottom: -5%;
+    left: 130px;
     font-size: 1.2cm;
     font-family: NeueHaasGroteskTextPro,-apple-system,BlinkMacSystemFont,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
 }
@@ -18,4 +28,21 @@ body {
 
 .display_name_code_color {
     color: #479ce4;
+}
+
+/*******************************************************************/
+/* Characters */
+
+.character_container {
+    position: relative;
+    padding-top: 0.5cm;
+}
+
+.character_class_name {
+    position: absolute;
+    top: 25%;
+    left: 100px;
+    color: white;
+    font-size: 0.8cm;
+    font-family: NeueHaasGroteskTextPro,-apple-system,BlinkMacSystemFont,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
 }

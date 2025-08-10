@@ -20,11 +20,12 @@ def get_page_user_info(userData: UserData, characterData: CharacterData):
         display_name = f"{userData.displayName}"
         display_name_code = f"{userData.displayNameCode}"
         character1_class = f"{characterData[0].className}"
-        character1_emblem = f"{BASE_URL}/{characterData[0].emblemPicturePath}"
+        character1_emblem = f"{BASE_URL}{characterData[0].emblemPicturePath}"
         character2_class = f"{characterData[1].className}"
-        character2_emblem = f"{BASE_URL}/{characterData[1].emblemPicturePath}"
+        character2_emblem = f"{BASE_URL}{characterData[1].emblemPicturePath}"
         character3_class = f"{characterData[2].className}"
-        character3_emblem = f"{BASE_URL}/{characterData[2].emblemPicturePath}"
+        character3_emblem = f"{BASE_URL}{characterData[2].emblemPicturePath}"
         styles = load_styles()
         page = content.format(**locals())
+    print(f"Page:\n{page}")
     return page
