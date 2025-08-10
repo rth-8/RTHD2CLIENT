@@ -43,7 +43,7 @@ class MyMainWindow(QMainWindow):
         self.secrets = MySecrets()
         self.oauth = MyOAuth(self.secrets)
         self.userData = UserData()
-        self.charactersData = []
+        self.charactersDataList = []
 
         if not self.oauth.session.authorized:
             link = self.oauth.start_oauth()
@@ -61,9 +61,19 @@ class MyMainWindow(QMainWindow):
         self._show_user_info()
 
 
-    def _url_changed(self, url):
+    def _url_changed(self, url: QUrl):
+        print("URL changed...")
+        # print(url)
         resp_url = str(url.url())
-        if resp_url.startswith("http"):
+        if resp_url.startswith("about:blank?profile"):
+            self.webview.setHtml(pages.get_page_user_info(self.userData, self.charactersDataList))
+        elif resp_url.startswith("about:blank?character"):
+            print(f"NEW PAGE: {resp_url}")
+            parts = resp_url.split("=")
+            chidx = int(parts[1]) - 1
+            if chidx >= 0 and chidx < len(self.charactersDataList):
+                self.webview.setHtml(pages.get_page_character(self.charactersDataList[chidx]))
+        elif resp_url.startswith("http"):
             print(f"NEW URL: {resp_url}")
             self.edit_url.setText(resp_url)
             self.oauth.get_and_store_token(resp_url)
@@ -148,12 +158,15 @@ class MyMainWindow(QMainWindow):
                 ch = CharacterData()
                 ch.emblemIconPath = d["Response"]["character"]["data"]["emblemPath"]
                 ch.emblemPicturePath = d["Response"]["character"]["data"]["emblemBackgroundPath"]
+                ch.emblemColor_R = d["Response"]["character"]["data"]["emblemColor"]["red"]
+                ch.emblemColor_G = d["Response"]["character"]["data"]["emblemColor"]["green"]
+                ch.emblemColor_B = d["Response"]["character"]["data"]["emblemColor"]["blue"]
                 ch.className = CharacterClass(d["Response"]["character"]["data"]["classType"]).name
-                self.charactersData.append(ch)
+                self.charactersDataList.append(ch)
 
 
     def _show_user_info(self):
-        self.webview.setHtml(pages.get_page_user_info(self.userData, self.charactersData))
+        self.webview.setHtml(pages.get_page_user_info(self.userData, self.charactersDataList))
 
 
 class MyUI:
