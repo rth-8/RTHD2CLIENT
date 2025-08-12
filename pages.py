@@ -3,7 +3,6 @@ from character_data import CharacterData
 
 BASE_URL = "https://www.bungie.net"
 
-
 def load_styles():
     styles = ""
     with open("html/styles.css", mode="r") as file:
@@ -36,9 +35,9 @@ def get_page_character(characterData: CharacterData):
     page = "<head></head><body><h1>:(</h1></body>"
     with open("html/character.html", mode="r") as file:
         content = file.read()
-        emblem_color_r = 74
-        emblem_color_g = 61
-        emblem_color_b = 21
+        emblem_color_r = characterData.emblemColor_R
+        emblem_color_g = characterData.emblemColor_G
+        emblem_color_b = characterData.emblemColor_B
         character_icon = f"{BASE_URL}{characterData.emblemIconPath}"
         character_class_name = f"{characterData.className}"
         styles = load_styles()

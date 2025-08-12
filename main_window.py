@@ -58,7 +58,7 @@ class MyMainWindow(QMainWindow):
                 self.webview.load(QUrl(link))
                 self._get_user_info()
         
-        self._show_user_info()
+        self.webview.setHtml(pages.get_page_user_info(self.userData, self.charactersDataList))
 
 
     def _url_changed(self, url: QUrl):
@@ -158,15 +158,10 @@ class MyMainWindow(QMainWindow):
                 ch = CharacterData()
                 ch.emblemIconPath = d["Response"]["character"]["data"]["emblemPath"]
                 ch.emblemPicturePath = d["Response"]["character"]["data"]["emblemBackgroundPath"]
-                ch.emblemColor_R = d["Response"]["character"]["data"]["emblemColor"]["red"]
-                ch.emblemColor_G = d["Response"]["character"]["data"]["emblemColor"]["green"]
-                ch.emblemColor_B = d["Response"]["character"]["data"]["emblemColor"]["blue"]
+                ch.emblemHash = d["Response"]["character"]["data"]["emblemHash"]
                 ch.className = CharacterClass(d["Response"]["character"]["data"]["classType"]).name
+                ch.set_bg_color()
                 self.charactersDataList.append(ch)
-
-
-    def _show_user_info(self):
-        self.webview.setHtml(pages.get_page_user_info(self.userData, self.charactersDataList))
 
 
 class MyUI:
