@@ -11,7 +11,7 @@ from my_secrets import MySecrets
 from my_oauth import MyOAuth
 from bungie_api import ComponentCharacter, CharacterClass
 from user_data import UserData
-from character_data import CharacterData
+from character_data import CharacterData, WeaponData
 import pages
 
 API_ROOT = "https://www.bungie.net/Platform"
@@ -19,9 +19,9 @@ API_ROOT = "https://www.bungie.net/Platform"
 USER_MEMBERSHIP_INFO = "User/GetMembershipsForCurrentUser/"
 USER_PROFILE = "{}/Destiny2/{}/Profile/{}/?components=100"
 
-CACHE_USER_MEMBERSHIP_INFO = "cache/membership_info"
-CACHE_USER_PROFILE = "cache/user_profile"
-CACHE_USER_CHARACTER_INFO = "cache/character_{}_info"
+CACHE_USER_MEMBERSHIP_INFO = "cache/membership_info.json"
+CACHE_USER_PROFILE = "cache/user_profile.json"
+CACHE_USER_CHARACTER_INFO = "cache/character_{}_info.json"
 
 class MyMainWindow(QMainWindow):
     def __init__(self):
@@ -109,7 +109,7 @@ class MyMainWindow(QMainWindow):
             print(f"Download from {endpoint_url}...")
             r = self.oauth.session.get(url=endpoint_url, headers={"X-API-Key": self.secrets.api_key})
             print(f"Response status: {r.status_code}")
-            print(r.text)
+            # print(r.text)
             json_data = r.json()
             if r.status_code == 200 and json_data["ErrorStatus"] == "Success":
                 with open(cache_file, "w") as file:
@@ -161,6 +161,35 @@ class MyMainWindow(QMainWindow):
                 ch.emblemHash = d["Response"]["character"]["data"]["emblemHash"]
                 ch.className = CharacterClass(d["Response"]["character"]["data"]["classType"]).name
                 ch.set_bg_color()
+
+                print("Get equiped items...")
+                items = d["Response"]["equipment"]["data"]["items"]
+                idx = 0
+                for item in items:
+                    itemHash = item["itemHash"]
+                    entityType = "DestinyInventoryItemDefinition"
+                    url = f"{API_ROOT}/Destiny2/Manifest/{entityType}/{itemHash}/"
+                    self._download_and_save(url, f"cache/character_{i}_equipment_{itemHash}.json")
+
+                    dd = self._load_from_cache(f"cache/character_{i}_equipment_{itemHash}.json")
+                    if idx == 0:
+                        ch.weapon1 = WeaponData()
+                        ch.weapon1.icon = dd["Response"]["displayProperties"]["icon"]
+                        ch.weapon1.name = dd["Response"]["displayProperties"]["name"]
+                        ch.weapon1.tierAndType = dd["Response"]["itemTypeAndTierDisplayName"]
+                    if idx == 1:
+                        ch.weapon2 = WeaponData()
+                        ch.weapon2.icon = dd["Response"]["displayProperties"]["icon"]
+                        ch.weapon2.name = dd["Response"]["displayProperties"]["name"]
+                        ch.weapon2.tierAndType = dd["Response"]["itemTypeAndTierDisplayName"]
+                    if idx == 2:
+                        ch.weapon3 = WeaponData()
+                        ch.weapon3.icon = dd["Response"]["displayProperties"]["icon"]
+                        ch.weapon3.name = dd["Response"]["displayProperties"]["name"]
+                        ch.weapon3.tierAndType = dd["Response"]["itemTypeAndTierDisplayName"]
+                
+                    idx = idx + 1
+                
                 self.charactersDataList.append(ch)
 
 

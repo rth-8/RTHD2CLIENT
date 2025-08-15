@@ -13,6 +13,9 @@ class CharacterData:
         self.emblemColor_R = 0
         self.emblemColor_G = 0
         self.emblemColor_B = 0
+        self.weapon1: WeaponData = None
+        self.weapon2: WeaponData = None
+        self.weapon3: WeaponData = None
 
     def set_bg_color(self):
         response = requests.get(f"{BASE_URL}{self.emblemIconPath}")
@@ -23,3 +26,10 @@ class CharacterData:
         self.emblemColor_R = dom_colors[0][1][0]
         self.emblemColor_G = dom_colors[0][1][1]
         self.emblemColor_B = dom_colors[0][1][2]
+
+
+class WeaponData:
+    def __init__(self) -> None:
+        self.icon = ""
+        self.name = ""
+        self.tierAndType = ""

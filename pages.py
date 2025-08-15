@@ -26,7 +26,7 @@ def get_page_user_info(userData: UserData, charactersDataList):
         character3_emblem = f"{BASE_URL}{charactersDataList[2].emblemPicturePath}"
         styles = load_styles()
         page = content.format(**locals())
-    print(f"Page:\n{page}")
+    # print(f"Page:\n{page}")
     return page
 
 
@@ -40,7 +40,16 @@ def get_page_character(characterData: CharacterData):
         emblem_color_b = characterData.emblemColor_B
         character_icon = f"{BASE_URL}{characterData.emblemIconPath}"
         character_class_name = f"{characterData.className}"
+        weapon1_icon = f"{BASE_URL}{characterData.weapon1.icon}"
+        weapon2_icon = f"{BASE_URL}{characterData.weapon2.icon}"
+        weapon3_icon = f"{BASE_URL}{characterData.weapon3.icon}"
+        weapon1_name = characterData.weapon1.name
+        weapon2_name = characterData.weapon2.name
+        weapon3_name = characterData.weapon3.name
+        weapon1_type = characterData.weapon1.tierAndType
+        weapon2_type = characterData.weapon2.tierAndType
+        weapon3_type = characterData.weapon3.tierAndType
         styles = load_styles()
         page = content.format(**locals())
-    print(f"Page:\n{page}")
+    # print(f"Page:\n{page}")
     return page

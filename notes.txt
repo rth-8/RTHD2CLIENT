@@ -1,1 +1,10 @@
 https://www.bungie.net/en/Application/Detail/44513
+
+---
+
+{API_ROOT}/Destiny2/Manifest/{entityType}/{hash}
+
+entityType:                         hash:
+------------------------------------------------------------------------
+DestinyInventoryItemDefinition      itemHash
+DestinyDamageTypeDefinition         defaultDamageTypeHash
