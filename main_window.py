@@ -9,7 +9,7 @@ import json
 
 from my_secrets import MySecrets
 from my_oauth import MyOAuth
-from bungie_api import ComponentCharacter, CharacterClass
+from bungie_api import ComponentCharacter, CharacterClass, ItemType, AmmoType
 from user_data import UserData
 from character_data import CharacterData, WeaponData
 import pages
@@ -177,16 +177,22 @@ class MyMainWindow(QMainWindow):
                         ch.weapon1.icon = dd["Response"]["displayProperties"]["icon"]
                         ch.weapon1.name = dd["Response"]["displayProperties"]["name"]
                         ch.weapon1.tierAndType = dd["Response"]["itemTypeAndTierDisplayName"]
+                        if dd["Response"]["itemType"] == ItemType.Weapon.value:
+                            ch.weapon1.ammoType = dd["Response"]["equippingBlock"]["ammoType"]
                     if idx == 1:
                         ch.weapon2 = WeaponData()
                         ch.weapon2.icon = dd["Response"]["displayProperties"]["icon"]
                         ch.weapon2.name = dd["Response"]["displayProperties"]["name"]
                         ch.weapon2.tierAndType = dd["Response"]["itemTypeAndTierDisplayName"]
+                        if dd["Response"]["itemType"] == ItemType.Weapon.value:
+                            ch.weapon2.ammoType = dd["Response"]["equippingBlock"]["ammoType"]
                     if idx == 2:
                         ch.weapon3 = WeaponData()
                         ch.weapon3.icon = dd["Response"]["displayProperties"]["icon"]
                         ch.weapon3.name = dd["Response"]["displayProperties"]["name"]
                         ch.weapon3.tierAndType = dd["Response"]["itemTypeAndTierDisplayName"]
+                        if dd["Response"]["itemType"] == ItemType.Weapon.value:
+                            ch.weapon3.ammoType = dd["Response"]["equippingBlock"]["ammoType"]
                 
                     idx = idx + 1
                 

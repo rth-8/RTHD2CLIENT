@@ -8,3 +8,21 @@ entityType:                         hash:
 ------------------------------------------------------------------------
 DestinyInventoryItemDefinition      itemHash
 DestinyDamageTypeDefinition         defaultDamageTypeHash
+
+
+---
+
+Primary ammo
+
+https://www.bungie.net/common/destiny2_content/icons/99f3733354862047493d8550e46a45ec.png
+
+Special ammo
+
+https://www.bungie.net/common/destiny2_content/icons/d920203c4fd4571ae7f39eb5249eaecb.png
+
+Heavy ammo
+
+https://www.bungie.net/common/destiny2_content/icons/78ef0e2b281de7b60c48920223e0f9b1.png
+
+---
+

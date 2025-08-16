@@ -149,3 +149,14 @@ body {
     font-size: 0.5cm;
     font-family: NeueHaasGroteskTextPro,-apple-system,BlinkMacSystemFont,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
 }
+
+.weapon_ammo_type {
+    position: absolute;
+    top: 50%;
+    left: 90px;
+}
+
+.ammo_type_icon {
+    width: 45%;
+    height: 45%;
+}

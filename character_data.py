@@ -1,6 +1,7 @@
 from PIL import Image
 import requests
 from io import BytesIO
+from bungie_api import AmmoType
 
 BASE_URL = "https://www.bungie.net"
 
@@ -33,3 +34,4 @@ class WeaponData:
         self.icon = ""
         self.name = ""
         self.tierAndType = ""
+        self.ammoType: AmmoType = AmmoType.NoType

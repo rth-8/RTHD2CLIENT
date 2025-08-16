@@ -1,7 +1,16 @@
 from user_data import UserData
 from character_data import CharacterData
+from bungie_api import AmmoType
+import os
 
 BASE_URL = "https://www.bungie.net"
+
+ammo_type_icons = [
+    "n/a",
+    "https://www.bungie.net/common/destiny2_content/icons/99f3733354862047493d8550e46a45ec.png",
+    "https://www.bungie.net/common/destiny2_content/icons/d920203c4fd4571ae7f39eb5249eaecb.png",
+    "https://www.bungie.net/common/destiny2_content/icons/78ef0e2b281de7b60c48920223e0f9b1.png",
+]
 
 def load_styles():
     styles = ""
@@ -49,6 +58,9 @@ def get_page_character(characterData: CharacterData):
         weapon1_type = characterData.weapon1.tierAndType
         weapon2_type = characterData.weapon2.tierAndType
         weapon3_type = characterData.weapon3.tierAndType
+        weapon1_ammo_type = ammo_type_icons[characterData.weapon1.ammoType]
+        weapon2_ammo_type = ammo_type_icons[characterData.weapon2.ammoType]
+        weapon3_ammo_type = ammo_type_icons[characterData.weapon3.ammoType]
         styles = load_styles()
         page = content.format(**locals())
     # print(f"Page:\n{page}")

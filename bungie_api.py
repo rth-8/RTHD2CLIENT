@@ -86,24 +86,29 @@ class ItemSubType(Enum):
     Crucible=1
     Vanguard=2
     Exotic=5
-    AutoRifle=6     #
+    # Weapons:
+    AutoRifle=6
     Shotgun=7
     Machinegun=8
-    HandCannon=	9
-    RocketLauncher=10   #
+    HandCannon=9
+    RocketLauncher=10
     FusionRifle=11
-    SniperRifle=12      #
+    SniperRifle=12
     PulseRifle=13
-    ScoutRifle=14   #
-    Crm=16
-    Sidearm=17  #
+    ScoutRifle=14
+    Crm=16 # ???
+    Sidearm=17
     Sword=18
+    # ???:
     Mask=19
     Shader=20
     # empiric:
     LinearFusionRifle=22
     GrenadeLauncher=23
     SubmachineGun=24
+    TraceRifle=25
+    Bow=31
+    Glaive=33
 
 
 class DamageType(Enum):
@@ -112,13 +117,14 @@ class DamageType(Enum):
     Arc=2
     Solar=3
     Void=4
-    Raid=5      # ???
+    Raid=5 # ???
     Stasis=6
     Strand=7
 
 
 # Note: values set empiricaly
 class AmmoType(Enum):
+    NoType=0
     Normal=1
     Special=2
     Heavy=3
