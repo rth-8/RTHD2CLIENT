@@ -1,7 +1,5 @@
 from user_data import UserData
 from character_data import CharacterData
-from bungie_api import AmmoType
-import os
 
 BASE_URL = "https://www.bungie.net"
 
@@ -28,11 +26,11 @@ def get_page_user_info(userData: UserData, charactersDataList):
         display_name = f"{userData.displayName}"
         display_name_code = f"{userData.displayNameCode}"
         character1_class = f"{charactersDataList[0].className}"
-        character1_emblem = f"{BASE_URL}{charactersDataList[0].emblemPicturePath}"
+        character1_emblem = f"{BASE_URL}{charactersDataList[0].emblemSmall}"
         character2_class = f"{charactersDataList[1].className}"
-        character2_emblem = f"{BASE_URL}{charactersDataList[1].emblemPicturePath}"
+        character2_emblem = f"{BASE_URL}{charactersDataList[1].emblemSmall}"
         character3_class = f"{charactersDataList[2].className}"
-        character3_emblem = f"{BASE_URL}{charactersDataList[2].emblemPicturePath}"
+        character3_emblem = f"{BASE_URL}{charactersDataList[2].emblemSmall}"
         styles = load_styles()
         page = content.format(**locals())
     # print(f"Page:\n{page}")
@@ -45,10 +43,8 @@ def get_page_character(characterData: CharacterData):
     with open("html/character.html", mode="r") as file:
         content = file.read()
         # Title:
-        emblem_color_r = characterData.emblemColor_R
-        emblem_color_g = characterData.emblemColor_G
-        emblem_color_b = characterData.emblemColor_B
-        character_icon = f"{BASE_URL}{characterData.emblemIconPath}"
+        charcter_details_emblem = f"{BASE_URL}{characterData.emblemLarge}"
+        character_details_icon = f"{BASE_URL}{characterData.emblemIconTransparent}"
         character_class_name = f"{characterData.className}"
         # Weapons:
         weapon1_icon = f"{BASE_URL}{characterData.equipedWeapons[0].icon}"

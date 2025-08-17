@@ -68,23 +68,32 @@ body {
 
 .character_details_header {
     position: relative;
-    height: 50px;
+    height: 120px;
     padding-left: 10px;
     border-top: 4px solid white;
 }
 
-.character_details_icon {
+.character_details_emblem {
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 50px;
-    height: 50px;
+    width: 100%;
+    height: 100%;
+    object-fit: none;
+}
+
+.character_details_icon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 80px;
+    height: 80px;
 }
 
 .character_details_class_name {
     position: absolute;
     top: 10px;
-    left: 60px;
+    left: 100px;
     color: white;
     text-shadow: 2px 2px black;
     font-size: 0.7cm;
@@ -97,18 +106,18 @@ body {
 
 .weapons_container {
     position: relative;
-    top: 5px;
-    width: 33%;
-    height: 90%;
+    top: 10px;
+    width: 30%;
+    height: 60%;
     background-color: rgba(255,255,255,0.15);
-    padding-top: 10px;
-    padding-left: 10px;
+    padding-top: 20px;
+    padding-left: 20px;
 }
 
 .item_container {
     position: relative;
     width: 100%;
-    height: 90px;
+    height: 120px;
 }
 
 .icon_container {
@@ -118,8 +127,8 @@ body {
 }
 
 .item_icon {
-    width: 70%;
-    height: 70%;
+    width: 80%;
+    height: 80%;
 }
 
 .item_normal {
@@ -133,7 +142,7 @@ body {
 .item_name {
     position: absolute;
     top: 0;
-    left: 90px;
+    left: 100px;
     text-shadow: 2px 2px black;
     color: white;
     font-size: 0.5cm;
@@ -143,7 +152,7 @@ body {
 .item_type {
     position: absolute;
     top: 25%;
-    left: 90px;
+    left: 100px;
     text-shadow: 2px 2px black;
     color: gray;
     font-size: 0.5cm;
@@ -153,7 +162,7 @@ body {
 .weapon_ammo_type {
     position: absolute;
     top: 50%;
-    left: 90px;
+    left: 100px;
 }
 
 .ammo_type_icon {
