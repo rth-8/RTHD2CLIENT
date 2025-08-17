@@ -44,23 +44,26 @@ def get_page_character(characterData: CharacterData):
     page = "<head></head><body><h1>:(</h1></body>"
     with open("html/character.html", mode="r") as file:
         content = file.read()
+        # Title:
         emblem_color_r = characterData.emblemColor_R
         emblem_color_g = characterData.emblemColor_G
         emblem_color_b = characterData.emblemColor_B
         character_icon = f"{BASE_URL}{characterData.emblemIconPath}"
         character_class_name = f"{characterData.className}"
-        weapon1_icon = f"{BASE_URL}{characterData.weapon1.icon}"
-        weapon2_icon = f"{BASE_URL}{characterData.weapon2.icon}"
-        weapon3_icon = f"{BASE_URL}{characterData.weapon3.icon}"
-        weapon1_name = characterData.weapon1.name
-        weapon2_name = characterData.weapon2.name
-        weapon3_name = characterData.weapon3.name
-        weapon1_type = characterData.weapon1.tierAndType
-        weapon2_type = characterData.weapon2.tierAndType
-        weapon3_type = characterData.weapon3.tierAndType
-        weapon1_ammo_type = ammo_type_icons[characterData.weapon1.ammoType]
-        weapon2_ammo_type = ammo_type_icons[characterData.weapon2.ammoType]
-        weapon3_ammo_type = ammo_type_icons[characterData.weapon3.ammoType]
+        # Weapons:
+        weapon1_icon = f"{BASE_URL}{characterData.equipedWeapons[0].icon}"
+        weapon2_icon = f"{BASE_URL}{characterData.equipedWeapons[1].icon}"
+        weapon3_icon = f"{BASE_URL}{characterData.equipedWeapons[2].icon}"
+        weapon1_name = characterData.equipedWeapons[0].name
+        weapon2_name = characterData.equipedWeapons[1].name
+        weapon3_name = characterData.equipedWeapons[2].name
+        weapon1_type = characterData.equipedWeapons[0].tierAndType
+        weapon2_type = characterData.equipedWeapons[1].tierAndType
+        weapon3_type = characterData.equipedWeapons[2].tierAndType
+        weapon1_ammo_type = ammo_type_icons[characterData.equipedWeapons[0].ammoType]
+        weapon2_ammo_type = ammo_type_icons[characterData.equipedWeapons[1].ammoType]
+        weapon3_ammo_type = ammo_type_icons[characterData.equipedWeapons[2].ammoType]
+        # Style:
         styles = load_styles()
         page = content.format(**locals())
     # print(f"Page:\n{page}")

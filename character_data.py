@@ -1,9 +1,17 @@
 from PIL import Image
 import requests
 from io import BytesIO
-from bungie_api import AmmoType
+from bungie_api import CharacterClass, ItemType, AmmoType
 
 BASE_URL = "https://www.bungie.net"
+
+class WeaponData:
+    def __init__(self) -> None:
+        self.icon = ""
+        self.name = ""
+        self.tierAndType = ""
+        self.ammoType: AmmoType = AmmoType.NoType
+
 
 class CharacterData:
     def __init__(self) -> None:
@@ -14,11 +22,10 @@ class CharacterData:
         self.emblemColor_R = 0
         self.emblemColor_G = 0
         self.emblemColor_B = 0
-        self.weapon1: WeaponData = None
-        self.weapon2: WeaponData = None
-        self.weapon3: WeaponData = None
+        self.equipedWeapons: WeaponData = []
 
-    def set_bg_color(self):
+
+    def _set_bg_color(self):
         response = requests.get(f"{BASE_URL}{self.emblemIconPath}")
         img = Image.open(BytesIO(response.content))
         img = img.quantize(colors=4, kmeans=4).convert('RGB')
@@ -29,9 +36,27 @@ class CharacterData:
         self.emblemColor_B = dom_colors[0][1][2]
 
 
-class WeaponData:
-    def __init__(self) -> None:
-        self.icon = ""
-        self.name = ""
-        self.tierAndType = ""
-        self.ammoType: AmmoType = AmmoType.NoType
+    def process_info_json(self, d):
+        self.emblemIconPath = d["Response"]["character"]["data"]["emblemPath"]
+        self.emblemPicturePath = d["Response"]["character"]["data"]["emblemBackgroundPath"]
+        self.emblemHash = d["Response"]["character"]["data"]["emblemHash"]
+        self.className = CharacterClass(d["Response"]["character"]["data"]["classType"]).name
+        self._set_bg_color()
+
+
+    def _add_weapon(self, d):
+        w = WeaponData()
+        w.icon = d["Response"]["displayProperties"]["icon"]
+        w.name = d["Response"]["displayProperties"]["name"]
+        w.tierAndType = d["Response"]["itemTypeAndTierDisplayName"]
+        if d["Response"]["itemType"] == ItemType.Weapon.value:
+            w.ammoType = d["Response"]["equippingBlock"]["ammoType"]
+        # Note: equiped items have game order, so first weapon in json data is weapon in first (primary) slot
+        self.equipedWeapons.append(w)
+
+
+    def process_item_json(self, d, idx):
+        type = d["Response"]["itemType"]
+
+        if type == ItemType.Weapon.value:
+            self._add_weapon(d)

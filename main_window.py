@@ -9,9 +9,9 @@ import json
 
 from my_secrets import MySecrets
 from my_oauth import MyOAuth
-from bungie_api import ComponentCharacter, CharacterClass, ItemType, AmmoType
+from bungie_api import ComponentCharacter
 from user_data import UserData
-from character_data import CharacterData, WeaponData
+from character_data import CharacterData
 import pages
 
 API_ROOT = "https://www.bungie.net/Platform"
@@ -156,11 +156,7 @@ class MyMainWindow(QMainWindow):
             d = self._load_from_cache(CACHE_USER_CHARACTER_INFO.format(i))
             if d:
                 ch = CharacterData()
-                ch.emblemIconPath = d["Response"]["character"]["data"]["emblemPath"]
-                ch.emblemPicturePath = d["Response"]["character"]["data"]["emblemBackgroundPath"]
-                ch.emblemHash = d["Response"]["character"]["data"]["emblemHash"]
-                ch.className = CharacterClass(d["Response"]["character"]["data"]["classType"]).name
-                ch.set_bg_color()
+                ch.process_info_json(d)
 
                 print("Get equiped items...")
                 items = d["Response"]["equipment"]["data"]["items"]
@@ -170,30 +166,8 @@ class MyMainWindow(QMainWindow):
                     entityType = "DestinyInventoryItemDefinition"
                     url = f"{API_ROOT}/Destiny2/Manifest/{entityType}/{itemHash}/"
                     self._download_and_save(url, f"cache/character_{i}_equipment_{itemHash}.json")
-
                     dd = self._load_from_cache(f"cache/character_{i}_equipment_{itemHash}.json")
-                    if idx == 0:
-                        ch.weapon1 = WeaponData()
-                        ch.weapon1.icon = dd["Response"]["displayProperties"]["icon"]
-                        ch.weapon1.name = dd["Response"]["displayProperties"]["name"]
-                        ch.weapon1.tierAndType = dd["Response"]["itemTypeAndTierDisplayName"]
-                        if dd["Response"]["itemType"] == ItemType.Weapon.value:
-                            ch.weapon1.ammoType = dd["Response"]["equippingBlock"]["ammoType"]
-                    if idx == 1:
-                        ch.weapon2 = WeaponData()
-                        ch.weapon2.icon = dd["Response"]["displayProperties"]["icon"]
-                        ch.weapon2.name = dd["Response"]["displayProperties"]["name"]
-                        ch.weapon2.tierAndType = dd["Response"]["itemTypeAndTierDisplayName"]
-                        if dd["Response"]["itemType"] == ItemType.Weapon.value:
-                            ch.weapon2.ammoType = dd["Response"]["equippingBlock"]["ammoType"]
-                    if idx == 2:
-                        ch.weapon3 = WeaponData()
-                        ch.weapon3.icon = dd["Response"]["displayProperties"]["icon"]
-                        ch.weapon3.name = dd["Response"]["displayProperties"]["name"]
-                        ch.weapon3.tierAndType = dd["Response"]["itemTypeAndTierDisplayName"]
-                        if dd["Response"]["itemType"] == ItemType.Weapon.value:
-                            ch.weapon3.ammoType = dd["Response"]["equippingBlock"]["ammoType"]
-                
+                    ch.process_item_json(dd, idx)
                     idx = idx + 1
                 
                 self.charactersDataList.append(ch)
