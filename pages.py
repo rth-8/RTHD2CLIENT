@@ -42,8 +42,10 @@ def get_page_character(characterData: CharacterData):
     page = "<head></head><body><h1>:(</h1></body>"
     with open("html/character.html", mode="r") as file:
         content = file.read()
+        # General:
+        character_idx = f"{characterData.idx}"
         # Title:
-        charcter_details_emblem = f"{BASE_URL}{characterData.emblemLarge}"
+        character_details_emblem = f"{BASE_URL}{characterData.emblemLarge}"
         character_details_icon = f"{BASE_URL}{characterData.emblemIconTransparent}"
         character_class_name = f"{characterData.className}"
         # Weapons:

@@ -3,3 +3,4 @@ cache/
 cert/
 token/
 .env
+mainwindow_ui.py

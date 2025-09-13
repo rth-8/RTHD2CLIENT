@@ -2,6 +2,8 @@ from enum import Enum
 
 # https://destinydevs.github.io/BungieNetPlatform/docs/schemas/Destiny-DestinyComponentType
 
+
+################################################################################
 class ComponentCharacter(Enum):
     # This will get you summary info about each of the characters in the profile.
     Characters=200
@@ -25,6 +27,7 @@ class ComponentCharacter(Enum):
     CharacterEquipment=205
 
 
+################################################################################
 class ComponentItem(Enum):
     # This will return basic info about instanced items - whether they can be equipped, their tracked status, and some info 
     # commonly needed in many places (current damage type, primary stat value, etc)
@@ -54,6 +57,7 @@ class ComponentItem(Enum):
     ItemPlugStates=308
 
 
+################################################################################
 class CharacterClass(Enum):
     Titan=0	 
     Hunter=1
@@ -61,6 +65,7 @@ class CharacterClass(Enum):
     Unknown=3
 
 
+################################################################################
 class ItemType(Enum):
     NoType=0
     Currency=1
@@ -81,6 +86,7 @@ class ItemType(Enum):
     Mod=19
 
 
+################################################################################
 class ItemSubType(Enum):
     NoType=0
     Crucible=1
@@ -111,6 +117,7 @@ class ItemSubType(Enum):
     Glaive=33
 
 
+################################################################################
 class DamageType(Enum):
     NoType=0
     Kinetic=1
@@ -122,6 +129,7 @@ class DamageType(Enum):
     Strand=7
 
 
+################################################################################
 # Note: values set empiricaly
 class AmmoType(Enum):
     NoType=0
