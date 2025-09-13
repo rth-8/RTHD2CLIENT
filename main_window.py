@@ -175,12 +175,6 @@ class MyMainWindow(QMainWindow):
                 ch.process_info_json(d)
                 self._get_character_equipment(d, ch, chidx)
                 self.charactersDataList.append(ch)
-        
-        # test
-        # url = f"{API_ROOT}/Destiny2/Manifest/DestinySocketTypeDefinition/2218962841/"
-        # url = (f"{API_ROOT}/Destiny2/{self.userData.membershipType}/Profile/{self.userData.membershipId}/Item/6917530097621948459/"
-        #     + "?components=300,307")
-        # self._download(url)
 
 
     def _get_character_info(self, chidx, chid):
@@ -202,7 +196,7 @@ class MyMainWindow(QMainWindow):
             self._download_and_save(url, f"cache/character_{chidx}_equipment_{itemHash}.json")
             dd = self._load_from_cache(f"cache/character_{chidx}_equipment_{itemHash}.json")
             if dd:
-                character_data.process_item_json(dd)
+                character_data.process_item_json(dd, item["state"])
 
 
     def _delete_cached_character(self, chidx):

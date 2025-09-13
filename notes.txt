@@ -39,23 +39,21 @@ https://www.bungie.net/common/destiny2_content/icons/78ef0e2b281de7b60c48920223e
 
 ---
 
-from DIM src:
-
-export const weaponMasterworkY2SocketTypeHash = 2218962841;     (d2-known-values.ts)
-
-???
-
-
----
-
 weapon examples:
 ~~~~~~~~~~~~~~~~
 
 hash        : 4176873718                ... from character info
 instance id : 6917530073501204721       ... --//--
+state       : 5                         ... --//--                                  ... 4 + 1 = masterworked + locked
 name        : "Fair Judgment"           ... from DestinyInventoryItemDefinition
 
 hash        : 2039776723
 instance id : 6917530097621948459
+state       : 1                         ... 1 = locked
 name        : "Wicked Sister"
+
+hash        :
+instance id :
+state       : 9                         ... 8 + 1 = crafted + locked
+name        : "The Recluse"
 

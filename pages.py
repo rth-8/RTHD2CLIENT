@@ -1,5 +1,7 @@
 from user_data import UserData
 from character_data import CharacterData
+from bungie_api import ItemState
+
 
 BASE_URL = "https://www.bungie.net"
 
@@ -9,6 +11,7 @@ ammo_type_icons = [
     "https://www.bungie.net/common/destiny2_content/icons/d920203c4fd4571ae7f39eb5249eaecb.png",
     "https://www.bungie.net/common/destiny2_content/icons/78ef0e2b281de7b60c48920223e0f9b1.png",
 ]
+
 
 def load_styles():
     styles = ""
@@ -61,6 +64,18 @@ def get_page_character(characterData: CharacterData):
         weapon1_ammo_type = ammo_type_icons[characterData.equipedWeapons[0].ammoType]
         weapon2_ammo_type = ammo_type_icons[characterData.equipedWeapons[1].ammoType]
         weapon3_ammo_type = ammo_type_icons[characterData.equipedWeapons[2].ammoType]
+        if characterData.equipedWeapons[0].state & ItemState.Masterwork.value:
+            weapon1_border_style = "item_masterworked"
+        else:
+            weapon1_border_style = "item_normal"
+        if characterData.equipedWeapons[1].state & ItemState.Masterwork.value:
+            weapon2_border_style = "item_masterworked"
+        else:
+            weapon2_border_style = "item_normal"
+        if characterData.equipedWeapons[2].state & ItemState.Masterwork.value:
+            weapon3_border_style = "item_masterworked"
+        else:
+            weapon3_border_style = "item_normal"
         # Style:
         styles = load_styles()
         page = content.format(**locals())
