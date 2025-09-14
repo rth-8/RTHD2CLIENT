@@ -1,4 +1,4 @@
-from bungie_api import CharacterClass, ItemState, ItemType, AmmoType
+from bungie_api import CharacterClass, ItemState, ItemType, DamageType, AmmoType
 
 BASE_URL = "https://www.bungie.net"
 
@@ -12,6 +12,7 @@ class WeaponData:
         self.name = ""
         self.tierAndType = ""
         self.ammoType: AmmoType = AmmoType.NoType
+        self.damageType: DamageType = DamageType.NoType
 
 
 ################################################################################
@@ -45,8 +46,9 @@ class CharacterData:
         w.tierAndType = d["Response"]["itemTypeAndTierDisplayName"]
         if d["Response"]["itemType"] == ItemType.Weapon.value:
             w.ammoType = d["Response"]["equippingBlock"]["ammoType"]
+            w.damageType = d["Response"]["defaultDamageType"]
         # print weapon info:
-        print(f"Weapon: {w.name} ({w.state})")
+        print(f"Weapon: {w.name} ({w.state}), ammo type {w.ammoType}, dmg type {w.damageType}")
         if w.state & ItemState.Locked.value:
             print(" - locked")
         if w.state & ItemState.Masterwork.value:

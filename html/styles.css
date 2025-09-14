@@ -165,11 +165,22 @@ body {
 
 .weapon_ammo_type {
     position: absolute;
-    top: 50%;
-    left: 100px;
+    top: 46%;
+    left: 130px;
 }
 
 .ammo_type_icon {
-    width: 45%;
-    height: 45%;
+    width: 36px;
+    height: 36px;
+}
+
+.weapon_damage_type {
+    position: absolute;
+    top: 52%;
+    left: 100px;
+}
+
+.damage_type_icon {
+    width: 24px;
+    height: 24px;
 }

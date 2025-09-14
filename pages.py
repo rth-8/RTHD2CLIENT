@@ -1,22 +1,28 @@
 from user_data import UserData
 from character_data import CharacterData
-from bungie_api import ItemState
+from bungie_api import ItemState, DamageType, AmmoType
 import base64
 
 
 BASE_URL = "https://www.bungie.net"
 
-ammo_type_icons = [
-    "n/a",
-    # "https://www.bungie.net/common/destiny2_content/icons/99f3733354862047493d8550e46a45ec.png",
-    "html/ammo_primary.png",
-    # "https://www.bungie.net/common/destiny2_content/icons/d920203c4fd4571ae7f39eb5249eaecb.png",
-    "html/ammo_special.png",
-    # "https://www.bungie.net/common/destiny2_content/icons/78ef0e2b281de7b60c48920223e0f9b1.png",
-    "html/ammo_heavy.png",
-]
+ammo_type_icons = {
+    AmmoType.Normal: "html/ammo_primary.png",
+    AmmoType.Special: "html/ammo_special.png",
+    AmmoType.Heavy: "html/ammo_heavy.png",
+}
 
-ammo_type_icons_raw_data = []
+damage_type_icons = {
+    DamageType.Kinetic: "html/damage_type_kinetic.png",
+    DamageType.Arc: "html/damage_type_arc.png",
+    DamageType.Solar: "html/damage_type_solar.png",
+    DamageType.Void: "html/damage_type_void.png",
+    DamageType.Stasis: "html/damage_type_stasis.png",
+    DamageType.Strand: "html/damage_type_strand.png",
+}
+
+ammo_type_icons_raw_data = {}
+damage_type_icons_raw_data = {}
 
 
 def load_local_image(path):
@@ -28,11 +34,10 @@ def load_local_image(path):
 
 
 def load_local_images():
-    for img in ammo_type_icons:
-        if img == "n/a":
-            ammo_type_icons_raw_data.append(None)
-        else:
-            ammo_type_icons_raw_data.append(load_local_image(img))
+    for key in ammo_type_icons.keys():
+        ammo_type_icons_raw_data[key] = load_local_image(ammo_type_icons[key])
+    for key in damage_type_icons.keys():
+        damage_type_icons_raw_data[key] = load_local_image(damage_type_icons[key])
 
 
 def load_styles():
@@ -86,12 +91,12 @@ def get_page_character(characterData: CharacterData):
         weapon1_type = characterData.equipedWeapons[0].tierAndType
         weapon2_type = characterData.equipedWeapons[1].tierAndType
         weapon3_type = characterData.equipedWeapons[2].tierAndType
-        # weapon1_ammo_type = ammo_type_icons[characterData.equipedWeapons[0].ammoType]
-        weapon1_ammo_type = "data:image/png;base64," + ammo_type_icons_raw_data[characterData.equipedWeapons[0].ammoType]
-        # weapon2_ammo_type = ammo_type_icons[characterData.equipedWeapons[1].ammoType]
-        weapon2_ammo_type = "data:image/png;base64," + ammo_type_icons_raw_data[characterData.equipedWeapons[1].ammoType]
-        # weapon3_ammo_type = ammo_type_icons[characterData.equipedWeapons[2].ammoType]
-        weapon3_ammo_type = "data:image/png;base64," + ammo_type_icons_raw_data[characterData.equipedWeapons[2].ammoType]
+        weapon1_ammo_type = "data:image/png;base64," + ammo_type_icons_raw_data[AmmoType(characterData.equipedWeapons[0].ammoType)]
+        weapon2_ammo_type = "data:image/png;base64," + ammo_type_icons_raw_data[AmmoType(characterData.equipedWeapons[1].ammoType)]
+        weapon3_ammo_type = "data:image/png;base64," + ammo_type_icons_raw_data[AmmoType(characterData.equipedWeapons[2].ammoType)]
+        weapon1_damage_type = "data:image/png;base64," + damage_type_icons_raw_data[DamageType(characterData.equipedWeapons[0].damageType)]
+        weapon2_damage_type = "data:image/png;base64," + damage_type_icons_raw_data[DamageType(characterData.equipedWeapons[1].damageType)]
+        weapon3_damage_type = "data:image/png;base64," + damage_type_icons_raw_data[DamageType(characterData.equipedWeapons[2].damageType)]
         if characterData.equipedWeapons[0].state & ItemState.Masterwork.value:
             weapon1_border_style = "item_masterworked"
         else:
