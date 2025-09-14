@@ -8,6 +8,7 @@ class WeaponData:
     def __init__(self) -> None:
         self.state = 0
         self.icon = ""
+        self.seasonOverlayIcon = ""
         self.name = ""
         self.tierAndType = ""
         self.ammoType: AmmoType = AmmoType.NoType
@@ -35,6 +36,7 @@ class CharacterData:
         w = WeaponData()
         w.state = state
         w.icon = d["Response"]["displayProperties"]["icon"]
+        w.seasonOverlayIcon = d["Response"]["iconWatermark"]
         w.name = d["Response"]["displayProperties"]["name"]
         w.tierAndType = d["Response"]["itemTypeAndTierDisplayName"]
         if d["Response"]["itemType"] == ItemType.Weapon.value:

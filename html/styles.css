@@ -139,6 +139,10 @@ body {
     border: 3px solid yellow;
 }
 
+.item_season_overlay {
+    border: 3px solid rgba(255,255,255,0)
+}
+
 .item_name {
     position: absolute;
     top: 0;

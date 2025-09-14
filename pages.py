@@ -55,6 +55,9 @@ def get_page_character(characterData: CharacterData):
         weapon1_icon = f"{BASE_URL}{characterData.equipedWeapons[0].icon}"
         weapon2_icon = f"{BASE_URL}{characterData.equipedWeapons[1].icon}"
         weapon3_icon = f"{BASE_URL}{characterData.equipedWeapons[2].icon}"
+        weapon1_season_overlay = f"{BASE_URL}{characterData.equipedWeapons[0].seasonOverlayIcon}"
+        weapon2_season_overlay = f"{BASE_URL}{characterData.equipedWeapons[1].seasonOverlayIcon}"
+        weapon3_season_overlay = f"{BASE_URL}{characterData.equipedWeapons[2].seasonOverlayIcon}"
         weapon1_name = characterData.equipedWeapons[0].name
         weapon2_name = characterData.equipedWeapons[1].name
         weapon3_name = characterData.equipedWeapons[2].name
