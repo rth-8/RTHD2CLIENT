@@ -69,19 +69,23 @@ class MyMainWindow(QMainWindow):
         # print(url)
         resp_url = str(url.url())
         if resp_url.startswith("about:blank?refresh"):
+            # Refresh character page
             chidx = int(resp_url.split('=')[1])
             print(f"Refresh character {chidx}...")
             self._delete_cached_character(chidx)
             self._get_character_info(chidx, self.userData.characterHashes[chidx])
             d = self._load_from_cache(CACHE_USER_CHARACTER_INFO.format(chidx))
             if d:
+                self.charactersDataList[chidx].clear()
                 self.charactersDataList[chidx].process_info_json(d)
                 self._get_character_equipment(d, self.charactersDataList[chidx], chidx)
             self.webview.setHtml(pages.get_page_character(self.charactersDataList[chidx]))
         elif resp_url.startswith("about:blank?profile"):
+            # Show profile page
             print("Switch to profile page...")
             self.webview.setHtml(pages.get_page_user_info(self.userData, self.charactersDataList))
         elif resp_url.startswith("about:blank?character"):
+            # Show character page
             print("Switch to character page...")
             print(f"NEW PAGE: {resp_url}")
             parts = resp_url.split("=")
@@ -89,6 +93,7 @@ class MyMainWindow(QMainWindow):
             if chidx >= 0 and chidx < len(self.charactersDataList):
                 self.webview.setHtml(pages.get_page_character(self.charactersDataList[chidx]))
         elif resp_url.startswith("http"):
+            # Show http page
             print(f"NEW URL: {resp_url}")
             self.edit_url.setText(resp_url)
             self.oauth.get_and_store_token(resp_url)

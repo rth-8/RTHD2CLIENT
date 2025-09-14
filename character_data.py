@@ -26,6 +26,10 @@ class CharacterData:
         self.equipedWeapons: WeaponData = []
 
 
+    def clear(self):
+        self.equipedWeapons.clear()
+
+
     def process_info_json(self, d):
         self.emblemIcon = d["Response"]["character"]["data"]["emblemPath"]
         self.emblemSmall = d["Response"]["character"]["data"]["emblemBackgroundPath"]
