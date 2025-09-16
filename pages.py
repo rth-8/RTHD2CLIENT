@@ -1,6 +1,6 @@
 from user_data import UserData
 from character_data import CharacterData
-from bungie_api import ItemState, DamageType, AmmoType
+from bungie_api import ItemState, ItemSubType, DamageType, AmmoType
 import base64
 
 
@@ -67,6 +67,32 @@ def get_page_user_info(userData: UserData, charactersDataList):
     return page
 
 
+def _getWeapon(characterData: CharacterData, idx):
+    icon = f"{BASE_URL}{characterData.equipedWeapons[idx].icon}"
+    season_overlay = f"{BASE_URL}{characterData.equipedWeapons[idx].seasonOverlayIcon}"
+    name = characterData.equipedWeapons[idx].name
+    type = characterData.equipedWeapons[idx].tierAndType
+    ammo_type = "data:image/png;base64," + ammo_type_icons_raw_data[AmmoType(characterData.equipedWeapons[idx].ammoType)]
+    damage_type = "data:image/png;base64," + damage_type_icons_raw_data[DamageType(characterData.equipedWeapons[idx].damageType)]
+    if characterData.equipedWeapons[idx].state & ItemState.Masterwork.value:
+        border_style = "item_masterworked"
+    else:
+        border_style = "item_normal"
+    return icon, season_overlay, name, type, ammo_type, damage_type, border_style
+
+
+def _getArmorPiece(characterData: CharacterData, subtype: ItemSubType.ArmorHelmet):
+    icon = f"{BASE_URL}{characterData.equipedArmor[subtype].icon}"
+    season_overlay = f"{BASE_URL}{characterData.equipedArmor[subtype].seasonOverlayIcon}"
+    name = characterData.equipedArmor[subtype].name
+    type = characterData.equipedArmor[subtype].tierAndType
+    if characterData.equipedArmor[subtype].state & ItemState.Masterwork.value:
+        border_style = "item_masterworked"
+    else:
+        border_style = "item_normal"
+    return icon, season_overlay, name, type, border_style
+
+
 def get_page_character(characterData: CharacterData):
     print("Create character page...")
     page = "<head></head><body><h1>:(</h1></body>"
@@ -79,36 +105,23 @@ def get_page_character(characterData: CharacterData):
         character_details_icon = f"{BASE_URL}{characterData.emblemIconTransparent}"
         character_class_name = f"{characterData.className}"
         # Weapons:
-        weapon1_icon = f"{BASE_URL}{characterData.equipedWeapons[0].icon}"
-        weapon2_icon = f"{BASE_URL}{characterData.equipedWeapons[1].icon}"
-        weapon3_icon = f"{BASE_URL}{characterData.equipedWeapons[2].icon}"
-        weapon1_season_overlay = f"{BASE_URL}{characterData.equipedWeapons[0].seasonOverlayIcon}"
-        weapon2_season_overlay = f"{BASE_URL}{characterData.equipedWeapons[1].seasonOverlayIcon}"
-        weapon3_season_overlay = f"{BASE_URL}{characterData.equipedWeapons[2].seasonOverlayIcon}"
-        weapon1_name = characterData.equipedWeapons[0].name
-        weapon2_name = characterData.equipedWeapons[1].name
-        weapon3_name = characterData.equipedWeapons[2].name
-        weapon1_type = characterData.equipedWeapons[0].tierAndType
-        weapon2_type = characterData.equipedWeapons[1].tierAndType
-        weapon3_type = characterData.equipedWeapons[2].tierAndType
-        weapon1_ammo_type = "data:image/png;base64," + ammo_type_icons_raw_data[AmmoType(characterData.equipedWeapons[0].ammoType)]
-        weapon2_ammo_type = "data:image/png;base64," + ammo_type_icons_raw_data[AmmoType(characterData.equipedWeapons[1].ammoType)]
-        weapon3_ammo_type = "data:image/png;base64," + ammo_type_icons_raw_data[AmmoType(characterData.equipedWeapons[2].ammoType)]
-        weapon1_damage_type = "data:image/png;base64," + damage_type_icons_raw_data[DamageType(characterData.equipedWeapons[0].damageType)]
-        weapon2_damage_type = "data:image/png;base64," + damage_type_icons_raw_data[DamageType(characterData.equipedWeapons[1].damageType)]
-        weapon3_damage_type = "data:image/png;base64," + damage_type_icons_raw_data[DamageType(characterData.equipedWeapons[2].damageType)]
-        if characterData.equipedWeapons[0].state & ItemState.Masterwork.value:
-            weapon1_border_style = "item_masterworked"
-        else:
-            weapon1_border_style = "item_normal"
-        if characterData.equipedWeapons[1].state & ItemState.Masterwork.value:
-            weapon2_border_style = "item_masterworked"
-        else:
-            weapon2_border_style = "item_normal"
-        if characterData.equipedWeapons[2].state & ItemState.Masterwork.value:
-            weapon3_border_style = "item_masterworked"
-        else:
-            weapon3_border_style = "item_normal"
+        weapon1_icon, weapon1_season_overlay, weapon1_name, weapon1_type, weapon1_ammo_type, weapon1_damage_type, weapon1_border_style = \
+            _getWeapon(characterData, 0)
+        weapon2_icon, weapon2_season_overlay, weapon2_name, weapon2_type, weapon2_ammo_type, weapon2_damage_type, weapon2_border_style = \
+            _getWeapon(characterData, 1)
+        weapon3_icon, weapon3_season_overlay, weapon3_name, weapon3_type, weapon3_ammo_type, weapon3_damage_type, weapon3_border_style = \
+            _getWeapon(characterData, 2)
+        # Armor:
+        helmet_icon, helmet_season_overlay, helmet_name, helmet_type, helmet_border_style = \
+            _getArmorPiece(characterData, ItemSubType.ArmorHelmet)
+        gauntlets_icon, gauntlets_season_overlay, gauntlets_name, gauntlets_type, gauntlets_border_style = \
+            _getArmorPiece(characterData, ItemSubType.ArmorGauntlets)
+        chest_icon, chest_season_overlay, chest_name, chest_type, chest_border_style = \
+            _getArmorPiece(characterData, ItemSubType.ArmorChest)
+        legs_icon, legs_season_overlay, legs_name, legs_type, legs_border_style = \
+            _getArmorPiece(characterData, ItemSubType.ArmorLegs)
+        classitem_icon, classitem_season_overlay, classitem_name, classitem_type, classitem_border_style = \
+            _getArmorPiece(characterData, ItemSubType.ArmorClassItem)
         # Style:
         styles = load_styles()
         page = content.format(**locals())

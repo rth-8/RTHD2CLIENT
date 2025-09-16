@@ -1,18 +1,30 @@
-from bungie_api import CharacterClass, ItemState, ItemType, DamageType, AmmoType
+from bungie_api import CharacterClass, ItemState, ItemType, ItemSubType, DamageType, AmmoType
 
 BASE_URL = "https://www.bungie.net"
 
 
 ################################################################################
-class WeaponData:
+class ItemData:
     def __init__(self) -> None:
         self.state = 0
         self.icon = ""
         self.seasonOverlayIcon = ""
         self.name = ""
         self.tierAndType = ""
+
+
+################################################################################
+class WeaponData(ItemData):
+    def __init__(self) -> None:
+        super().__init__()
         self.ammoType: AmmoType = AmmoType.NoType
         self.damageType: DamageType = DamageType.NoType
+
+
+################################################################################
+class ArmorData(ItemData):
+    def __init__(self) -> None:
+        super().__init__()
 
 
 ################################################################################
@@ -25,10 +37,12 @@ class CharacterData:
         self.emblemIconTransparent = None
         self.emblemLarge = None
         self.equipedWeapons: WeaponData = []
+        self.equipedArmor = {}
 
 
     def clear(self):
         self.equipedWeapons.clear()
+        self.equipedArmor.clear()
 
 
     def process_info_json(self, d):
@@ -59,10 +73,23 @@ class CharacterData:
         self.equipedWeapons.append(w)
 
 
+    def _add_armor(self, d, state):
+        sub_type = ItemSubType(d["Response"]["itemSubType"])
+        a = ArmorData()
+        a.state = state
+        a.icon = d["Response"]["displayProperties"]["icon"]
+        a.seasonOverlayIcon = d["Response"]["iconWatermark"]
+        a.name = d["Response"]["displayProperties"]["name"]
+        a.tierAndType = d["Response"]["itemTypeAndTierDisplayName"]
+        self.equipedArmor[sub_type] = a
+
+
     def process_item_json(self, d, state):
         type = d["Response"]["itemType"]
         if type == ItemType.Weapon.value:
             self._add_weapon(d, state)
+        elif type == ItemType.Armor.value:
+            self._add_armor(d, state)
         elif type == ItemType.Emblem.value:
             self.emblemIconTransparent = d["Response"]["secondaryOverlay"]
             self.emblemLarge = d["Response"]["secondarySpecial"]

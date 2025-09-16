@@ -133,6 +133,11 @@ class ItemSubType(Enum):
     GrenadeLauncher=23
     SubmachineGun=24
     TraceRifle=25
+    ArmorHelmet=26
+    ArmorGauntlets=27
+    ArmorChest=28
+    ArmorLegs=29
+    ArmorClassItem=30
     Bow=31
     Glaive=33
 
