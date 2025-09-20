@@ -1,10 +1,19 @@
 from user_data import UserData
 from character_data import CharacterData
-from bungie_api import ItemState, ItemSubType, DamageType, AmmoType
+from bungie_api import CharacterStas, ItemState, ItemSubType, DamageType, AmmoType
 import base64
 
 
 BASE_URL = "https://www.bungie.net"
+
+stat_icons = {
+    CharacterStas.Health: "html/stat_health.png",
+    CharacterStas.Melee: "html/stat_melee.png",
+    CharacterStas.Grenade: "html/stat_grenade.png",
+    CharacterStas.Super: "html/stat_super.png",
+    CharacterStas.Class: "html/stat_class.png",
+    CharacterStas.Weapons: "html/stat_weapons.png",
+}
 
 ammo_type_icons = {
     AmmoType.Normal: "html/ammo_primary.png",
@@ -21,6 +30,7 @@ damage_type_icons = {
     DamageType.Strand: "html/damage_type_strand.png",
 }
 
+stat_icons_raw_data = {}
 ammo_type_icons_raw_data = {}
 damage_type_icons_raw_data = {}
 
@@ -34,6 +44,8 @@ def load_local_image(path):
 
 
 def load_local_images():
+    for key in stat_icons.keys():
+        stat_icons_raw_data[key] = load_local_image(stat_icons[key])
     for key in ammo_type_icons.keys():
         ammo_type_icons_raw_data[key] = load_local_image(ammo_type_icons[key])
     for key in damage_type_icons.keys():
@@ -104,6 +116,21 @@ def get_page_character(characterData: CharacterData):
         character_details_emblem = f"{BASE_URL}{characterData.emblemLarge}"
         character_details_icon = f"{BASE_URL}{characterData.emblemIconTransparent}"
         character_class_name = f"{characterData.className}"
+        # Stats:
+        character_subclass_icon = f"{BASE_URL}{characterData.subclassIcon}"
+        character_stat_power = characterData.stats[CharacterStas.Power]
+        stat_health_icon = "data:image/png;base64," + stat_icons_raw_data[CharacterStas.Health]
+        stat_melee_icon = "data:image/png;base64," + stat_icons_raw_data[CharacterStas.Melee]
+        stat_grenade_icon = "data:image/png;base64," + stat_icons_raw_data[CharacterStas.Grenade]
+        stat_super_icon = "data:image/png;base64," + stat_icons_raw_data[CharacterStas.Super]
+        stat_class_icon = "data:image/png;base64," + stat_icons_raw_data[CharacterStas.Class]
+        stat_weapons_icon = "data:image/png;base64," + stat_icons_raw_data[CharacterStas.Weapons]
+        character_stat_health = characterData.stats[CharacterStas.Health]
+        character_stat_melee = characterData.stats[CharacterStas.Melee]
+        character_stat_grenade = characterData.stats[CharacterStas.Grenade]
+        character_stat_super = characterData.stats[CharacterStas.Super]
+        character_stat_class = characterData.stats[CharacterStas.Class]
+        character_stat_weapons = characterData.stats[CharacterStas.Weapons]
         # Weapons:
         weapon1_icon, weapon1_season_overlay, weapon1_name, weapon1_type, weapon1_ammo_type, weapon1_damage_type, weapon1_border_style = \
             _getWeapon(characterData, 0)

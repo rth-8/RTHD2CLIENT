@@ -55,8 +55,8 @@ body {
 
 .character_class_name {
     position: absolute;
-    top: 25%;
-    left: 100px;
+    top: 30%;
+    left: 120px;
     color: white;
     font-size: 0.8cm;
     font-family: NeueHaasGroteskTextPro,-apple-system,BlinkMacSystemFont,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
@@ -93,18 +93,18 @@ body {
 .character_details_class_name {
     position: absolute;
     top: 10px;
-    left: 100px;
+    left: 120px;
     color: white;
     text-shadow: 2px 2px black;
-    font-size: 0.7cm;
+    font-size: 0.8cm;
     font-family: NeueHaasGroteskTextPro,-apple-system,BlinkMacSystemFont,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
     text-shadow: 2px 2px black;
 }
 
 /*******************************************************************/
-/* Weapons */
+/* Stats */
 
-.weapons_container {
+.stats_container {
     position: absolute;
     top: 140px;
     left: 8px;
@@ -115,10 +115,50 @@ body {
     padding-left: 20px;
 }
 
+.sublass_icon {
+    widows: 150px;
+    height: 150px;
+}
+
+.stat_power {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    color: yellow;
+    text-shadow: 2px 2px black;
+    font-size: 1.5cm;
+    font-family: NeueHaasGroteskTextPro,-apple-system,BlinkMacSystemFont,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+    text-shadow: 2px 2px black;
+}
+
+.stats_table {
+    width: 80%;
+    padding-top: 20px;
+    color: white;
+    text-shadow: 2px 2px black;
+    font-size: 0.5cm;
+    font-family: NeueHaasGroteskTextPro,-apple-system,BlinkMacSystemFont,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+    text-shadow: 2px 2px black;
+}
+
+/*******************************************************************/
+/* Weapons & Armor */
+
+.weapons_container {
+    position: absolute;
+    top: 140px;
+    left: 34%;
+    width: 30%;
+    height: 550px;
+    background-color: rgba(255,255,255,0.15);
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
 .armor_container {
     position: absolute;
     top: 140px;
-    left: 33%;
+    left: 67.5%;
     width: 30%;
     height: 550px;
     background-color: rgba(255,255,255,0.15);

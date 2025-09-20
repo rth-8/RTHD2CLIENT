@@ -66,6 +66,18 @@ class CharacterClass(Enum):
 
 
 ################################################################################
+# from DIM:
+class CharacterStas(Enum):
+    Power=1935470627
+    Health=392767087
+    Melee=4244567218
+    Grenade=1735777505
+    Super=144602215
+    Class=1943323491
+    Weapons=2996146975
+
+
+################################################################################
 class ItemState(Enum):
     NoState=0
     # If this bit is set, the item has been "locked" by the user and cannot be deleted. 
@@ -128,7 +140,7 @@ class ItemSubType(Enum):
     # ???:
     Mask=19
     Shader=20
-    # empiric:
+    # empiric/from DIM:
     LinearFusionRifle=22
     GrenadeLauncher=23
     SubmachineGun=24

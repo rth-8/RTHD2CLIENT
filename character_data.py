@@ -1,4 +1,4 @@
-from bungie_api import CharacterClass, ItemState, ItemType, ItemSubType, DamageType, AmmoType
+from bungie_api import CharacterClass, CharacterStas, ItemState, ItemType, ItemSubType, DamageType, AmmoType
 
 BASE_URL = "https://www.bungie.net"
 
@@ -36,6 +36,9 @@ class CharacterData:
         self.emblemSmall = None
         self.emblemIconTransparent = None
         self.emblemLarge = None
+        self.subclassType: DamageType = DamageType.NoType
+        self.subclassIcon = None
+        self.stats = {}
         self.equipedWeapons: WeaponData = []
         self.equipedArmor = {}
 
@@ -49,6 +52,14 @@ class CharacterData:
         self.emblemIcon = d["Response"]["character"]["data"]["emblemPath"]
         self.emblemSmall = d["Response"]["character"]["data"]["emblemBackgroundPath"]
         self.className = CharacterClass(d["Response"]["character"]["data"]["classType"]).name
+        stats = d["Response"]["character"]["data"]["stats"]
+        self.stats[CharacterStas.Power] = stats[f"{CharacterStas.Power.value}"]
+        self.stats[CharacterStas.Health] = stats[f"{CharacterStas.Health.value}"]
+        self.stats[CharacterStas.Melee] = stats[f"{CharacterStas.Melee.value}"]
+        self.stats[CharacterStas.Grenade] = stats[f"{CharacterStas.Grenade.value}"]
+        self.stats[CharacterStas.Super] = stats[f"{CharacterStas.Super.value}"]
+        self.stats[CharacterStas.Class] = stats[f"{CharacterStas.Class.value}"]
+        self.stats[CharacterStas.Weapons] = stats[f"{CharacterStas.Weapons.value}"]
 
 
     def _add_weapon(self, d, state):
@@ -86,7 +97,13 @@ class CharacterData:
 
     def process_item_json(self, d, state):
         type = d["Response"]["itemType"]
-        if type == ItemType.Weapon.value:
+        if type == ItemType.Subclass.value:
+            self.subclassType = DamageType(d["Response"]["talentGrid"]["hudDamageType"])
+            self.subclassIcon = d["Response"]["displayProperties"]["icon"]
+            # TODO: Subclass icon is now loaded from bungie site, 
+            # but in future it might be loaded from local image (see pages.py, e.g. ammo type icons).
+            # For this purpose subclassType is also stored.
+        elif type == ItemType.Weapon.value:
             self._add_weapon(d, state)
         elif type == ItemType.Armor.value:
             self._add_armor(d, state)
