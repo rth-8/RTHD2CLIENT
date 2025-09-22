@@ -3,11 +3,19 @@
 
 <style>{styles}</style>
 
+<script>{functions}</script>
+
 <body>
     <div class="character_details_header">
         <img class="character_details_emblem" src="{character_details_emblem}"/>
         <img class="character_details_icon" src="{character_details_icon}"/>
         <div class="character_details_class_name">{character_class_name}</div>
+        <button class="refresh_button" onclick="doRefresh({character_idx})">
+            <img id="refresh_button_img" class="refresh_static" src="{refresh_button_image}"/>
+        </button>
+        <button class="back_button" onclick="toProfile()">
+            <img class="back_button_icon" src="{back_button_image}"/>
+        </button>
     </div>
     <div class="stats_container">
         <img class="sublass_icon" src="{character_subclass_icon}"/>
@@ -79,6 +87,4 @@
             <span class="item_type">{classitem_type}</span>
         </div>
     </div>
-    <a href="about:blank?refresh={character_idx}">Refresh</a>
-    <a href="about:blank?profile">Profile</a>
 </body>

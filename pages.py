@@ -35,7 +35,7 @@ ammo_type_icons_raw_data = {}
 damage_type_icons_raw_data = {}
 
 
-def load_local_image(path):
+def load_local_image(path: str) -> str:
     with open(path, "rb") as file:
         print(f"Loading local image: {path}")
         raw = file.read()
@@ -52,11 +52,15 @@ def load_local_images():
         damage_type_icons_raw_data[key] = load_local_image(damage_type_icons[key])
 
 
-def load_styles():
-    styles = ""
-    with open("html/styles.css", mode="r") as file:
-        styles = file.read()
-    return styles
+refresh_button_icon_raw_data = load_local_image("html/refresh.png")
+back_button_icon_raw_data = load_local_image("html/back.png")
+
+
+def load_file(path):
+    content = ""
+    with open(path, mode="r") as file:
+        content = file.read()
+    return content
 
 
 def get_page_user_info(userData: UserData, charactersDataList):
@@ -73,7 +77,7 @@ def get_page_user_info(userData: UserData, charactersDataList):
         character2_emblem = f"{BASE_URL}{charactersDataList[1].emblemSmall}"
         character3_class = f"{charactersDataList[2].className}"
         character3_emblem = f"{BASE_URL}{charactersDataList[2].emblemSmall}"
-        styles = load_styles()
+        styles = load_file("html/styles.css")
         page = content.format(**locals())
     # print(f"Page:\n{page}")
     return page
@@ -112,6 +116,8 @@ def get_page_character(characterData: CharacterData):
         content = file.read()
         # General:
         character_idx = f"{characterData.idx}"
+        refresh_button_image = "data:image/png;base64," + refresh_button_icon_raw_data
+        back_button_image = "data:image/png;base64," + back_button_icon_raw_data
         # Title:
         character_details_emblem = f"{BASE_URL}{characterData.emblemLarge}"
         character_details_icon = f"{BASE_URL}{characterData.emblemIconTransparent}"
@@ -150,7 +156,8 @@ def get_page_character(characterData: CharacterData):
         classitem_icon, classitem_season_overlay, classitem_name, classitem_type, classitem_border_style = \
             _getArmorPiece(characterData, ItemSubType.ArmorClassItem)
         # Style:
-        styles = load_styles()
+        styles = load_file("html/styles.css")
+        functions = load_file("html/functions.js")
         page = content.format(**locals())
     # print(f"Page:\n{page}")
     return page

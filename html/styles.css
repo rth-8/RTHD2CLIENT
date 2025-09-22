@@ -237,3 +237,59 @@ body {
     width: 24px;
     height: 24px;
 }
+
+/*******************************************************************/
+/* Refresh button */
+
+.refresh_button {
+    position: absolute;
+    top: 10px;
+    left: 95%;
+    width: 45px;
+    height: 45px;
+    border: none;
+    background-color: rgba(255,255,255,0.15);
+    cursor: pointer;
+}
+
+.refresh_static {
+    position: relative;
+    width: 90%;
+    height: 70%;
+}
+
+@keyframes spin {
+    from { 
+        transform: rotate(0deg) 
+    }
+    to { 
+        transform: rotate(359deg) 
+    }
+}
+
+.resfresh_spin {
+    position: relative;
+    width: 60%;
+    height: 50%;
+    animation: spin 2s linear infinite; 
+}
+
+/*******************************************************************/
+/* Back button */
+
+.back_button {
+    position: absolute;
+    top: 65px;
+    left: 95%;
+    width: 45px;
+    height: 45px;
+    border: none;
+    background-color: rgba(255,255,255,0.15);
+    cursor: pointer;
+}
+
+.back_button_icon {
+    position: relative;
+    width: 90%;
+    height: 70%;
+}
