@@ -55,6 +55,8 @@ def load_local_images():
 refresh_button_icon_raw_data = load_local_image("html/refresh.png")
 back_button_icon_raw_data = load_local_image("html/back.png")
 
+shaped_overlay_icon_raw_data = load_local_image("html/shaped_overlay.png")
+
 
 def load_file(path):
     content = ""
@@ -85,6 +87,10 @@ def get_page_user_info(userData: UserData, charactersDataList):
 
 def _getWeapon(characterData: CharacterData, idx):
     icon = f"{BASE_URL}{characterData.equipedWeapons[idx].icon}"
+    if characterData.equipedWeapons[idx].state & ItemState.Crafted.value:
+        shaped_overlay = "data:image/png;base64," + shaped_overlay_icon_raw_data
+    else:
+        shaped_overlay = ""
     season_overlay = f"{BASE_URL}{characterData.equipedWeapons[idx].seasonOverlayIcon}"
     name = characterData.equipedWeapons[idx].name
     type = characterData.equipedWeapons[idx].tierAndType
@@ -94,7 +100,7 @@ def _getWeapon(characterData: CharacterData, idx):
         border_style = "item_masterworked"
     else:
         border_style = "item_normal"
-    return icon, season_overlay, name, type, ammo_type, damage_type, border_style
+    return icon, shaped_overlay, season_overlay, name, type, ammo_type, damage_type, border_style
 
 
 def _getArmorPiece(characterData: CharacterData, subtype: ItemSubType.ArmorHelmet):
@@ -138,11 +144,14 @@ def get_page_character(characterData: CharacterData):
         character_stat_class = characterData.stats[CharacterStas.Class]
         character_stat_weapons = characterData.stats[CharacterStas.Weapons]
         # Weapons:
-        weapon1_icon, weapon1_season_overlay, weapon1_name, weapon1_type, weapon1_ammo_type, weapon1_damage_type, weapon1_border_style = \
+        weapon1_icon, weapon1_shaped_overlay, weapon1_season_overlay, \
+        weapon1_name, weapon1_type, weapon1_ammo_type, weapon1_damage_type, weapon1_border_style = \
             _getWeapon(characterData, 0)
-        weapon2_icon, weapon2_season_overlay, weapon2_name, weapon2_type, weapon2_ammo_type, weapon2_damage_type, weapon2_border_style = \
+        weapon2_icon, weapon2_shaped_overlay, weapon2_season_overlay, \
+        weapon2_name, weapon2_type, weapon2_ammo_type, weapon2_damage_type, weapon2_border_style = \
             _getWeapon(characterData, 1)
-        weapon3_icon, weapon3_season_overlay, weapon3_name, weapon3_type, weapon3_ammo_type, weapon3_damage_type, weapon3_border_style = \
+        weapon3_icon, weapon3_shaped_overlay, weapon3_season_overlay, \
+        weapon3_name, weapon3_type, weapon3_ammo_type, weapon3_damage_type, weapon3_border_style = \
             _getWeapon(characterData, 2)
         # Armor:
         helmet_icon, helmet_season_overlay, helmet_name, helmet_type, helmet_border_style = \
