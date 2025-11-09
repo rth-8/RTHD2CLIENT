@@ -6,7 +6,7 @@ function doRefresh(idx) {
     else {
         list.remove("refresh_static");
         list.add("refresh_spin");
-        // window.location.href = "about:blank?refresh="+idx;
+        window.location.href = "about:blank?refresh="+idx;
     }
 }
 

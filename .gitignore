@@ -2,5 +2,6 @@ __pycache__/
 cache/
 cert/
 token/
+tmp/
 .env
 mainwindow_ui.py

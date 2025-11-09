@@ -16,34 +16,6 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QPushButton" name="btn_refresh">
-        <property name="text">
-         <string>R</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="edit_url"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btn_go">
-        <property name="text">
-         <string>Go</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btn_clear">
-        <property name="text">
-         <string>X</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
      <widget class="QFrame" name="frm_mid">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -66,7 +38,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1280</width>
      <height>21</height>
     </rect>
    </property>
