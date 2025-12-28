@@ -98,6 +98,7 @@ class CharacterData:
     def process_item_json(self, d, state):
         type = d["Response"]["itemType"]
         if type == ItemType.Subclass.value:
+            # NOTE: Character Subclass is retrieved as equiped item (part of equiped items list)
             self.subclassType = DamageType(d["Response"]["talentGrid"]["hudDamageType"])
             self.subclassIcon = d["Response"]["displayProperties"]["icon"]
             # TODO: Subclass icon is now loaded from bungie site, 

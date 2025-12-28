@@ -19,9 +19,11 @@ API_ROOT = "https://www.bungie.net/Platform"
 
 USER_MEMBERSHIP_INFO = "User/GetMembershipsForCurrentUser/"
 USER_PROFILE = "{}/Destiny2/{}/Profile/{}/?components=100"
+USER_PROFILE_INV = "{}/Destiny2/{}/Profile/{}/?components=102"
 
 CACHE_USER_MEMBERSHIP_INFO = "cache/membership_info.json"
 CACHE_USER_PROFILE = "cache/user_profile.json"
+CACHE_USER_PROFILE_INV = "cache/user_profile_inv.json"
 CACHE_USER_CHARACTER_INFO = "cache/character_{}_info.json"
 
 
@@ -158,6 +160,14 @@ class MyMainWindow(QMainWindow):
             print("Get user profile...")
             url = USER_PROFILE.format(API_ROOT, self.userData.membershipType, self.userData.membershipId)
             self._download_and_save(url, CACHE_USER_PROFILE)
+            print("Get user profile inventory...")
+            url = USER_PROFILE_INV.format(API_ROOT, self.userData.membershipType, self.userData.membershipId)
+            self._download_and_save(url, CACHE_USER_PROFILE_INV)
+            # TEST
+            print("----- TEST -----")
+            self._download(f"{API_ROOT}/Destiny2/{self.userData.membershipType}/Profile/{self.userData.membershipId}/Item/6917529204803977856/?components=300,301,302,303,304,305,306,307,308")
+            self._download(f"{API_ROOT}/Destiny2/Manifest/DestinyInventoryItemDefinition/1395261499/")
+            print("----- TEST -----")
 
         # get character infos
         d = self._load_from_cache(CACHE_USER_PROFILE)
