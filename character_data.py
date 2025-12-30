@@ -1,4 +1,4 @@
-from bungie_api import CharacterClass, CharacterStas, ItemState, ItemType, ItemSubType, DamageType, AmmoType
+from bungie_api import CharacterClass, CharacterStats, ItemState, ItemType, ItemSubType, DamageType, AmmoType
 
 BASE_URL = "https://www.bungie.net"
 
@@ -53,13 +53,13 @@ class CharacterData:
         self.emblemSmall = d["Response"]["character"]["data"]["emblemBackgroundPath"]
         self.className = CharacterClass(d["Response"]["character"]["data"]["classType"]).name
         stats = d["Response"]["character"]["data"]["stats"]
-        self.stats[CharacterStas.Power] = stats[f"{CharacterStas.Power.value}"]
-        self.stats[CharacterStas.Health] = stats[f"{CharacterStas.Health.value}"]
-        self.stats[CharacterStas.Melee] = stats[f"{CharacterStas.Melee.value}"]
-        self.stats[CharacterStas.Grenade] = stats[f"{CharacterStas.Grenade.value}"]
-        self.stats[CharacterStas.Super] = stats[f"{CharacterStas.Super.value}"]
-        self.stats[CharacterStas.Class] = stats[f"{CharacterStas.Class.value}"]
-        self.stats[CharacterStas.Weapons] = stats[f"{CharacterStas.Weapons.value}"]
+        self.stats[CharacterStats.Power] = stats[f"{CharacterStats.Power.value}"]
+        self.stats[CharacterStats.Health] = stats[f"{CharacterStats.Health.value}"]
+        self.stats[CharacterStats.Melee] = stats[f"{CharacterStats.Melee.value}"]
+        self.stats[CharacterStats.Grenade] = stats[f"{CharacterStats.Grenade.value}"]
+        self.stats[CharacterStats.Super] = stats[f"{CharacterStats.Super.value}"]
+        self.stats[CharacterStats.Class] = stats[f"{CharacterStats.Class.value}"]
+        self.stats[CharacterStats.Weapons] = stats[f"{CharacterStats.Weapons.value}"]
 
 
     def _add_weapon(self, d, state):

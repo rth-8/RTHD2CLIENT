@@ -29,6 +29,26 @@ DestinyDamageTypeDefinition         defaultDamageTypeHash
 
 ---
 
+General item info (name, icon, sub-type, damage type, ...):
+
+{API_ROOT}/Destiny2/Manifest/DestinyInventoryItemDefinition/{itemHash}/
+
+
+---
+
+Instance of item info (stats, perks, ...):
+
+{API_ROOT}/Destiny2/{membershipType}/Profile/{membershipId}/Item/{itemInstanceId}/?components=300,301,302,303,304,305,306,307,308"
+
+
+Example: 1 instance (6917530156741587405) of existing Techsec Boots (95722356)
+
+{API_ROOT}/Destiny2/{membershipType}/Profile/{membershipId}/Item/6917530156741587405/?components=300,301,302,303,304,305,306,307,308")
+{API_ROOT}/Destiny2/Manifest/DestinyInventoryItemDefinition/95722356/")
+
+
+---
+
 Primary ammo
 
 https://www.bungie.net/common/destiny2_content/icons/99f3733354862047493d8550e46a45ec.png

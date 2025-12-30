@@ -7,9 +7,10 @@ import sys
 import os
 import json
 
+import constants
 from my_secrets import MySecrets
 from my_oauth import MyOAuth
-from bungie_api import ComponentCharacter
+from bungie_api import ComponentCharacter, ComponentItem
 from user_data import UserData
 from character_data import CharacterData
 import pages
@@ -147,6 +148,38 @@ class MyMainWindow(QMainWindow):
         return json_data
 
 
+    def _get_general_info_about_vault_items(self):
+        d = self._load_from_cache(CACHE_USER_PROFILE_INV)
+        if d:
+            inv = d["Response"]["profileInventory"]["data"]["items"]
+            # NOTE: Currently only interested in uniquely instanced items (weapons and armor pieces) with quantity 1
+            # TODO: What about consumables and other non-instanced items ?
+            inv = list(filter(lambda item: "itemInstanceId" in item and "quantity" in item and int(item["quantity"]) == 1, inv))
+            print("Get profile inventory items...")
+            print("Count: ", len(inv))
+            for item in inv:
+                itemHash = item["itemHash"]
+                url = f"{API_ROOT}/Destiny2/Manifest/DestinyInventoryItemDefinition/{itemHash}/"
+                self._download_and_save(url, f"cache/user_profile_inv_{itemHash}.json")
+
+
+    def _get_instanced_items_info(self, filter):
+        d = self._load_from_cache(CACHE_USER_PROFILE_INV)
+        if d:
+            inv = d["Response"]["profileInventory"]["data"]["items"]
+            for item in inv:
+                itemHash = item["itemHash"]
+                if itemHash in filter:
+                    itemInstanceId = item["itemInstanceId"]
+                    url = (f"{API_ROOT}/Destiny2/{self.userData.membershipType}/Profile/{self.userData.membershipId}/"
+                            + f"Item/{itemInstanceId}/?components="
+                            + str(ComponentItem.ItemInstances.value) + ","
+                            + str(ComponentItem.ItemPerks.value) + ","
+                            + str(ComponentItem.ItemStats.value) + ","
+                            + str(ComponentItem.ItemCommonData.value))
+                    self._download_and_save(url, f"cache/user_profile_inv_instance_{itemInstanceId}.json")
+
+
     def _get_user_info(self):
         # get membership info
         print("Get user membership info...")
@@ -163,11 +196,6 @@ class MyMainWindow(QMainWindow):
             print("Get user profile inventory...")
             url = USER_PROFILE_INV.format(API_ROOT, self.userData.membershipType, self.userData.membershipId)
             self._download_and_save(url, CACHE_USER_PROFILE_INV)
-            # TEST
-            print("----- TEST -----")
-            self._download(f"{API_ROOT}/Destiny2/{self.userData.membershipType}/Profile/{self.userData.membershipId}/Item/6917529204803977856/?components=300,301,302,303,304,305,306,307,308")
-            self._download(f"{API_ROOT}/Destiny2/Manifest/DestinyInventoryItemDefinition/1395261499/")
-            print("----- TEST -----")
 
         # get character infos
         d = self._load_from_cache(CACHE_USER_PROFILE)
@@ -190,6 +218,14 @@ class MyMainWindow(QMainWindow):
                 ch.process_info_json(d)
                 self._get_character_equipment(d, ch, chidx)
                 self.charactersDataList.append(ch)
+        
+        self._get_instanced_items_info(constants.class_items)
+
+        # TEST QUERIES:
+        # print("----- TEST -----")
+        # self._download(f"{API_ROOT}/Destiny2/{self.userData.membershipType}/Profile/{self.userData.membershipId}/Item/6917530156741587405/?components=300,301,302,303,304,305,306,307,308")
+        # self._download(f"{API_ROOT}/Destiny2/Manifest/DestinyInventoryItemDefinition/95722356/")
+        # print("----- TEST -----")
 
 
     def _get_character_info(self, chidx, chid):

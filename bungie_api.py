@@ -67,7 +67,7 @@ class CharacterClass(Enum):
 
 ################################################################################
 # from DIM:
-class CharacterStas(Enum):
+class CharacterStats(Enum):
     Power=1935470627
     Health=392767087
     Melee=4244567218
