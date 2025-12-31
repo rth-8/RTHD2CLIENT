@@ -25,6 +25,21 @@ def get_stat(data, stat: CharacterStats, max, max_stat: CharacterStats, reduce):
     return value, new_max, new_stat, new_reduce
 
 
+def print_item(list, max, max_stat):
+    print(f"{str(list[0]):15}"
+        + f"{list[1]:25}"
+        + f"{list[2]:15}"
+        + f"{str(list[3]):5}"
+        + f"{str(list[4]):5}"
+        + f"{str(list[5]):5}"
+        + f"{str(list[6]):5}"
+        + f"{str(list[7]):5}"
+        + f"{str(list[8]):5}"
+        + f"{str(list[9]):5}"
+        + f"{str(list[10]):10}"
+        + f"max: {str(max)} ({str(max_stat)})")
+
+
 dir = "./cache/"
 files = list(filter(lambda item: item.startswith("user_profile_inv_instance_") and item.endswith(".json"), os.listdir(dir)))
 
@@ -33,8 +48,9 @@ list_of_lists = []
 for file_name in files:
     path_name = f"{dir}{file_name}"
     with open(path_name, 'r') as file:
+        # load data
         data = json.load(file)
-        row = []
+        # extract data
         tier = int(data["Response"]["instance"]["data"]["gearTier"])
         # Ignore tier-less items from before Armor 3.0
         if tier == 0:
@@ -58,17 +74,17 @@ for file_name in files:
         stat_class -= reduce
         stat_weapons -= reduce
         archetype = map_archetype(max_stat)
-        print(f"{str(hash):15}"
-            + f"{instance_id:25}"
-            + f"{archetype:15}"
-            + f"{str(tier):5}"
-            + f"{str(stat_health):5}"
-            + f"{str(stat_melee):5}"
-            + f"{str(stat_grenade):5}"
-            + f"{str(stat_super):5}"
-            + f"{str(stat_class):5}"
-            + f"{str(stat_weapons):5}"
-            + f"max: {str(max)} ({str(max_stat)})")
+        # create pattern
+        ptrn = []
+        ptrn.append('1' if stat_health >  0 else '0')
+        ptrn.append('1' if stat_melee >   0 else '0')
+        ptrn.append('1' if stat_grenade > 0 else '0')
+        ptrn.append('1' if stat_super >   0 else '0')
+        ptrn.append('1' if stat_class >   0 else '0')
+        ptrn.append('1' if stat_weapons > 0 else '0')
+        pattern = "".join(ptrn)
+        # make row
+        row = []
         row.append(hash)
         row.append(instance_id)
         row.append(archetype)
@@ -79,12 +95,49 @@ for file_name in files:
         row.append(stat_super)
         row.append(stat_class)
         row.append(stat_weapons)
+        row.append(pattern)
+        print_item(row, max, max_stat)
         list_of_lists.append(row)
 
-df = pd.DataFrame(list_of_lists, columns=["hash", "id", "archetype", "tier", "health", "melee", "grenade", "super", "class", "weapons"])
+
+size = len(list_of_lists)
+duplicates = []
+for i in range(0, size-1, 1):
+    for j in range(i, size, 1):
+        if list_of_lists[i][1] == list_of_lists[j][1]:
+            # skip comparison of same instances
+            continue
+        # Comparison:
+        # 1. instance
+        # 2. archetype
+        # 3. pattern
+        if \
+           list_of_lists[i][0] == list_of_lists[j][0] and \
+           list_of_lists[i][2] == list_of_lists[j][2] and \
+           list_of_lists[i][10] == list_of_lists[j][10]:
+            print("-----------------------------------------")
+            print_item(list_of_lists[i], 0, "")
+            print_item(list_of_lists[j], 0, "")
+            # print DIM query
+            dupe = f"id:{list_of_lists[i][1]} or id:{list_of_lists[j][1]}"
+            print(dupe)
+            duplicates.append(dupe)
+
+print(f"Found {len(duplicates)} duplicates")
+
+with open("duplicates.log", 'w') as file:
+    for dupe in duplicates:
+        file.write(dupe)
+        file.write('\n')
+
+
+df = pd.DataFrame(list_of_lists, 
+    columns=["hash", "id", "archetype", "tier", "health", "melee", "grenade", "super", "class", "weapons", "pattern"])
 # print(df)
 
 # print(df.loc[ df["melee"] == 25])
 # print(df.loc[ df["archetype"] == "Paragon"])
 # print(df.loc[ df["tier"] == 5])
-print(df.loc[(df["tier"] == 5) & (df["archetype"] == "Paragon")])
+# print(df.loc[(df["tier"] == 5) & (df["archetype"] == "Paragon")])
+print(df.loc[ (df["archetype"] == "Specialist") & df["pattern"] == "010011"])
+

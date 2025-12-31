@@ -5,3 +5,4 @@ token/
 tmp/
 .env
 mainwindow_ui.py
+*.log

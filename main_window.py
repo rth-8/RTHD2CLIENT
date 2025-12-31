@@ -160,6 +160,10 @@ class MyMainWindow(QMainWindow):
             for item in inv:
                 itemHash = item["itemHash"]
                 url = f"{API_ROOT}/Destiny2/Manifest/DestinyInventoryItemDefinition/{itemHash}/"
+                # NOTE: From the nature of inventory data (itemHash vs itemInstanceId), 
+                # there will be multiple instances for single itemHash. However there will not be duplicated
+                # queries to endpoint, because _download_and_save checks, if data were already downloaded 
+                # (i.e. corresponding file is in cache).
                 self._download_and_save(url, f"cache/user_profile_inv_{itemHash}.json")
 
 
