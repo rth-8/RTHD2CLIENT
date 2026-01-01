@@ -10,3 +10,7 @@ class_items = [
     3408036410,
     4129998876,
 ]
+
+titan_exotic_class_items = [
+    266021826   # Stoicism
+]

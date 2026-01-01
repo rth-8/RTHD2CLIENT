@@ -40,8 +40,14 @@ def print_item(list, max, max_stat):
         + f"max: {str(max)} ({str(max_stat)})")
 
 
-dir = "./cache/"
+dir = "./cache/class_items/"
+# dir = "./cache/titan_exotic_class_items/"
 files = list(filter(lambda item: item.startswith("user_profile_inv_instance_") and item.endswith(".json"), os.listdir(dir)))
+
+if len(files) == 0:
+    print("No instanced items found!")
+    exit(0)
+
 
 list_of_lists = []
 

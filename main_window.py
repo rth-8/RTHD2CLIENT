@@ -167,7 +167,7 @@ class MyMainWindow(QMainWindow):
                 self._download_and_save(url, f"cache/user_profile_inv_{itemHash}.json")
 
 
-    def _get_instanced_items_info(self, filter):
+    def _get_instanced_items_info(self, filter, type_name):
         d = self._load_from_cache(CACHE_USER_PROFILE_INV)
         if d:
             inv = d["Response"]["profileInventory"]["data"]["items"]
@@ -181,7 +181,7 @@ class MyMainWindow(QMainWindow):
                             + str(ComponentItem.ItemPerks.value) + ","
                             + str(ComponentItem.ItemStats.value) + ","
                             + str(ComponentItem.ItemCommonData.value))
-                    self._download_and_save(url, f"cache/user_profile_inv_instance_{itemInstanceId}.json")
+                    self._download_and_save(url, f"cache/{type_name}/user_profile_inv_instance_{itemInstanceId}.json")
 
 
     def _get_user_info(self):
@@ -223,7 +223,8 @@ class MyMainWindow(QMainWindow):
                 self._get_character_equipment(d, ch, chidx)
                 self.charactersDataList.append(ch)
         
-        self._get_instanced_items_info(constants.class_items)
+        # self._get_instanced_items_info(constants.class_items, "class_items")
+        self._get_instanced_items_info(constants.titan_exotic_class_items, "titan_exotic_class_items")
 
         # TEST QUERIES:
         # print("----- TEST -----")
