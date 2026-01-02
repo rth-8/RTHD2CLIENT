@@ -10,10 +10,11 @@ import json
 import constants
 from my_secrets import MySecrets
 from my_oauth import MyOAuth
-from bungie_api import ComponentCharacter, ComponentItem
+from bungie_api import ComponentCharacter, ComponentItem, ItemSubType
 from user_data import UserData
 from character_data import CharacterData
 import pages
+from stats import files_for_armor_type, extract_instances, find_duplicates
 
 
 API_ROOT = "https://www.bungie.net/Platform"
@@ -45,6 +46,8 @@ class MyMainWindow(QMainWindow):
         layout = QVBoxLayout()
         layout.addWidget(self.webview)
         self.frm_mid.setLayout(layout)
+
+        self.btn_find.clicked.connect(self._slot_find_btn)
 
         self.secrets = MySecrets()
         self.oauth = MyOAuth(self.secrets)
@@ -123,11 +126,11 @@ class MyMainWindow(QMainWindow):
     def _download_and_save(self, endpoint_url, cache_file):
         download = False
         if not os.path.exists(cache_file):
-            download = True
+            download = True     # file not exists yet -> download
         else:
             fstat = os.stat(cache_file)
             if fstat.st_size == 0:
-                download = True
+                download = True     # file exists, but its empty -> download
         if download:
             print(f"Download from {endpoint_url}...")
             r = self.oauth.session.get(url=endpoint_url, headers={"X-API-Key": self.secrets.api_key})
@@ -138,6 +141,7 @@ class MyMainWindow(QMainWindow):
                 with open(cache_file, "w") as file:
                     print(f"Saving {cache_file}...")
                     json.dump(json_data, file)
+        return download
 
 
     def _load_from_cache(self, cache_file):
@@ -168,6 +172,15 @@ class MyMainWindow(QMainWindow):
 
 
     def _get_instanced_items_info(self, filter, type_name):
+        print(f"Downloading instances for '{type_name}'")
+        # first try to create subfolder
+        folder = f"cache/{type_name}"
+        dirtocreate = os.getcwd() + "/" + folder
+        try:
+            os.stat(dirtocreate)
+        except:
+            os.mkdir(dirtocreate)
+        # proceed with downloading instanced items info
         d = self._load_from_cache(CACHE_USER_PROFILE_INV)
         if d:
             inv = d["Response"]["profileInventory"]["data"]["items"]
@@ -222,9 +235,6 @@ class MyMainWindow(QMainWindow):
                 ch.process_info_json(d)
                 self._get_character_equipment(d, ch, chidx)
                 self.charactersDataList.append(ch)
-        
-        # self._get_instanced_items_info(constants.class_items, "class_items")
-        self._get_instanced_items_info(constants.titan_exotic_class_items, "titan_exotic_class_items")
 
         # TEST QUERIES:
         # print("----- TEST -----")
@@ -269,6 +279,48 @@ class MyMainWindow(QMainWindow):
                     if os.path.exists(to_del):
                         print(f"Delete item {to_del}")
                         os.remove(to_del)
+
+
+    def _slot_find_btn(self):
+        at = ItemSubType(self.cmb_armor_type.currentIndex() + ItemSubType.ArmorHelmet.value)
+        print(f"FIND: {at}")
+        match at:
+            case ItemSubType.ArmorHelmet:    self._get_instanced_items_info(constants.helmets,     "helmets")
+            case ItemSubType.ArmorGauntlets: self._get_instanced_items_info(constants.gauntlets,   "gauntlets")
+            case ItemSubType.ArmorChest:     self._get_instanced_items_info(constants.chests,      "chests")
+            case ItemSubType.ArmorLegs:      self._get_instanced_items_info(constants.legs,        "legs")
+            case ItemSubType.ArmorClassItem: self._get_instanced_items_info(constants.class_items, "class_items")
+            case _: raise Exception("Unexpected armor type!")
+        dir, files = files_for_armor_type(at)
+        print(f"DIR = {dir}")
+        if len(files) == 0:
+            print("No instanced items found!")
+            return
+        self._remove_nonexisting_instances(files)
+        lst = extract_instances(dir, files)
+        dupes = find_duplicates(lst)
+        self.statusbar.showMessage(f"Found {len(dupes)} duplicates")
+        for dupe in dupes:
+            self.txt_result.append(dupe)
+
+
+    def _get_all_instances(self):
+        l = []
+        d = self._load_from_cache(CACHE_USER_PROFILE_INV)
+        if d:
+            inv = d["Response"]["profileInventory"]["data"]["items"]
+            inv = list(filter(lambda item: "itemInstanceId" in item and "quantity" in item and int(item["quantity"]) == 1, inv))
+            for item in inv:
+                l.append(item["itemInstanceId"])
+        return l
+
+
+    def _remove_nonexisting_instances(self, files):
+        instances = self._get_all_instances()
+        for f in files:
+            iid = f[26:-5]
+            if iid not in instances:
+                print(f"Remove: {f}")
 
 
 ################################################################################

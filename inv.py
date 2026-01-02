@@ -30,8 +30,17 @@ def print_table(items):
         print(f"{str(h):15}{type_name:15}{subtype_name:15}{v[TIER]:15}{v[NAME]}")
 
 
+def print_list(lst):
+    print("~~~~~~~~~~~~~~~~~~~~")
+    for elem in lst:
+        print(f"{elem[0]},    # {elem[1]}")
+
+
 def get_legendary_armor_subtype(items, subtype):
     lst = [(h, v[NAME]) for (h, v) in items.items() if v[TYPE] == 2 and v[STYP] == subtype and v[TIER] == "Legendary"]
+    # print(lst)
+    # print(len(lst))
+    print_list(lst)
     return lst
 
 
@@ -62,25 +71,11 @@ print_table(items)
 
 
 helmets = get_legendary_armor_subtype(items, 26)
-# print(helmets)
-# print(len(helmets))
 
 gauntlets = get_legendary_armor_subtype(items, 27)
-# print(gauntlets)
-# print(len(gauntlets))
 
 chests = get_legendary_armor_subtype(items, 28)
-# print(chests)
-# print(len(chests))
 
 legs = get_legendary_armor_subtype(items, 29)
-# print(legs)
-# print(len(legs))
 
 class_items = get_legendary_armor_subtype(items, 30)
-print(class_items)
-print(len(class_items))
-
-
-for item in class_items:
-    print(item[0])
