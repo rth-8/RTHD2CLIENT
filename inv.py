@@ -44,38 +44,42 @@ def get_legendary_armor_subtype(items, subtype):
     return lst
 
 
-dir = "./cache/"
-files = list(filter(lambda item: item.startswith("user_profile_inv_") and item.endswith(".json"), os.listdir(dir)))
-# print(files)
+#################################################################################################################################
 
-items = {}
-for file_name in files:
-    path_name = f"{dir}{file_name}"
-    # print(f"LOAD: {file_name}")
-    # print(f"LOAD: {path_name}")
-    with open(path_name, 'r') as file:
-        data = json.load(file)
-        hash = data["Response"]["hash"]
-        type = int(data["Response"]["itemType"])
-        subtype = int(data["Response"]["itemSubType"])
-        tier = data["Response"]["inventory"]["tierTypeName"]
-        items[hash] = (
-            type,
-            subtype,
-            tier,
-            data["Response"]["displayProperties"]["name"],
-        )
+if __name__ == '__main__':
+    dir = "./cache/"
+    files = list(filter(lambda item: item.startswith("user_profile_inv_") and item.endswith(".json"), os.listdir(dir)))
+    # print(files)
+
+    items = {}
+    for file_name in files:
+        path_name = f"{dir}{file_name}"
+        # print(f"LOAD: {file_name}")
+        # print(f"LOAD: {path_name}")
+        with open(path_name, 'r') as file:
+            data = json.load(file)
+            hash = data["Response"]["hash"]
+            type = int(data["Response"]["itemType"])
+            subtype = int(data["Response"]["itemSubType"])
+            tier = data["Response"]["inventory"]["tierTypeName"]
+            items[hash] = (
+                type,
+                subtype,
+                tier,
+                data["Response"]["displayProperties"]["name"],
+            )
 
 
-print_table(items)
+    print_table(items)
 
 
-helmets = get_legendary_armor_subtype(items, 26)
+    helmets = get_legendary_armor_subtype(items, 26)
 
-gauntlets = get_legendary_armor_subtype(items, 27)
+    gauntlets = get_legendary_armor_subtype(items, 27)
 
-chests = get_legendary_armor_subtype(items, 28)
+    chests = get_legendary_armor_subtype(items, 28)
 
-legs = get_legendary_armor_subtype(items, 29)
+    legs = get_legendary_armor_subtype(items, 29)
 
-class_items = get_legendary_armor_subtype(items, 30)
+    class_items = get_legendary_armor_subtype(items, 30)
+

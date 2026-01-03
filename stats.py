@@ -141,33 +141,35 @@ def find_duplicates(lol):
 
 #################################################################################################################################
 
-dir, files = files_for_armor_type(ItemSubType.ArmorHelmet)
-# dir, files = files_for_armor_type(ItemSubType.ArmorClassItem)
-if len(files) == 0:
-    print("No instanced items found!")
-    exit(0)
+if __name__ == '__main__':
+
+    dir, files = files_for_armor_type(ItemSubType.ArmorHelmet)
+    # dir, files = files_for_armor_type(ItemSubType.ArmorClassItem)
+    if len(files) == 0:
+        print("No instanced items found!")
+        exit(0)
 
 
-list_of_lists = extract_instances(dir, files)
+    list_of_lists = extract_instances(dir, files)
 
 
-duplicates = find_duplicates(list_of_lists)
-print(f"Found {len(duplicates)} duplicates")
+    duplicates = find_duplicates(list_of_lists)
+    print(f"Found {len(duplicates)} duplicates")
 
 
-with open("duplicates.log", 'w') as file:
-    for dupe in duplicates:
-        file.write(dupe)
-        file.write('\n')
+    with open("duplicates.log", 'w') as file:
+        for dupe in duplicates:
+            file.write(dupe)
+            file.write('\n')
 
 
-df = pd.DataFrame(list_of_lists, 
-    columns=["hash", "id", "archetype", "tier", "health", "melee", "grenade", "super", "class", "weapons", "pattern"])
-# print(df)
+    df = pd.DataFrame(list_of_lists, 
+        columns=["hash", "id", "archetype", "tier", "health", "melee", "grenade", "super", "class", "weapons", "pattern"])
+    # print(df)
 
-# print(df.loc[ df["melee"] == 25])
-# print(df.loc[ df["archetype"] == "Paragon"])
-# print(df.loc[ df["tier"] == 5])
-# print(df.loc[(df["tier"] == 5) & (df["archetype"] == "Paragon")])
-print(df.loc[ (df["archetype"] == "Specialist") & df["pattern"] == "010011"])
+    # print(df.loc[ df["melee"] == 25])
+    # print(df.loc[ df["archetype"] == "Paragon"])
+    # print(df.loc[ df["tier"] == 5])
+    # print(df.loc[(df["tier"] == 5) & (df["archetype"] == "Paragon")])
+    print(df.loc[ (df["archetype"] == "Specialist") & df["pattern"] == "010011"])
 
