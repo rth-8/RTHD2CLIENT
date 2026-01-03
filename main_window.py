@@ -292,14 +292,14 @@ class MyMainWindow(QMainWindow):
             case ItemSubType.ArmorClassItem: self._get_instanced_items_info(constants.class_items, "class_items")
             case _: raise Exception("Unexpected armor type!")
         dir, files = files_for_armor_type(at)
-        print(f"DIR = {dir}")
         if len(files) == 0:
             print("No instanced items found!")
             return
         self._remove_nonexisting_instances(files)
         lst = extract_instances(dir, files)
-        dupes = find_duplicates(lst)
+        dupes = find_duplicates(lst, self.chb_archetype.isChecked())
         self.statusbar.showMessage(f"Found {len(dupes)} duplicates")
+        self.txt_result.clear()
         for dupe in dupes:
             self.txt_result.append(dupe)
 

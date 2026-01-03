@@ -121,6 +121,9 @@
           <property name="text">
            <string>Use archetype</string>
           </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -131,7 +134,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QTextBrowser" name="txt_result"/>
+         <widget class="QTextBrowser" name="txt_result">
+          <property name="readOnly">
+           <bool>false</bool>
+          </property>
+          <property name="placeholderText">
+           <string extracomment="Results"/>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

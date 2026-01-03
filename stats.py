@@ -113,7 +113,7 @@ def extract_instances(dir, files):
     return lol
 
 
-def find_duplicates(lol):
+def find_duplicates(lol, use_archetype=True):
     size = len(lol)
     dupes = []
     for i in range(0, size-1, 1):
@@ -122,18 +122,25 @@ def find_duplicates(lol):
                 # skip comparison of same instances
                 continue
             # Comparison:
-            # 1. instance
-            # 2. archetype
-            # 3. pattern
-            if \
-               lol[i][0]  == lol[j][0] and \
-               lol[i][2]  == lol[j][2] and \
-               lol[i][10] == lol[j][10]:
+            # 1. item (hash) (idx 0)
+            # 2. archetype (idx 2)
+            # 3. pattern (idx 10)
+            item1 = None
+            item2 = None
+            if use_archetype:
+                if lol[i][0]  == lol[j][0] and lol[i][2]  == lol[j][2] and lol[i][10] == lol[j][10]:
+                    item1 = lol[i]
+                    item2 = lol[j]
+            else:
+                if lol[i][0]  == lol[j][0] and lol[i][10] == lol[j][10]:
+                    item1 = lol[i]
+                    item2 = lol[j]
+            if item1 and item2:
                 print("-----------------------------------------")
-                print_item(lol[i], 0, "")
-                print_item(lol[j], 0, "")
+                print_item(item1, 0, "")
+                print_item(item2, 0, "")
                 # print DIM query
-                dupe = f"id:{lol[i][1]} or id:{lol[j][1]}"
+                dupe = f"id:{item1[1]} or id:{item2[1]}"
                 print(dupe)
                 dupes.append(dupe)
     return dupes
@@ -154,6 +161,7 @@ if __name__ == '__main__':
 
 
     duplicates = find_duplicates(list_of_lists)
+    # duplicates = find_duplicates(list_of_lists, False)
     print(f"Found {len(duplicates)} duplicates")
 
 
