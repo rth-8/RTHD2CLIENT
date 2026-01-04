@@ -54,6 +54,9 @@ class MyMainWindow(QMainWindow):
         self.userData = UserData()
         self.charactersDataList = []
 
+        self.inv_instances = []
+        self.inv_duplicates = []
+
         if not self.oauth.session.authorized:
             link = self.oauth.start_oauth()
             self.webview.load(QUrl(link))
@@ -281,30 +284,7 @@ class MyMainWindow(QMainWindow):
                         os.remove(to_del)
 
 
-    def _slot_find_btn(self):
-        at = ItemSubType(self.cmb_armor_type.currentIndex() + ItemSubType.ArmorHelmet.value)
-        print(f"FIND: {at}")
-        match at:
-            case ItemSubType.ArmorHelmet:    self._get_instanced_items_info(constants.helmets,     "helmets")
-            case ItemSubType.ArmorGauntlets: self._get_instanced_items_info(constants.gauntlets,   "gauntlets")
-            case ItemSubType.ArmorChest:     self._get_instanced_items_info(constants.chests,      "chests")
-            case ItemSubType.ArmorLegs:      self._get_instanced_items_info(constants.legs,        "legs")
-            case ItemSubType.ArmorClassItem: self._get_instanced_items_info(constants.class_items, "class_items")
-            case _: raise Exception("Unexpected armor type!")
-        dir, files = files_for_armor_type(at)
-        if len(files) == 0:
-            print("No instanced items found!")
-            return
-        self._remove_nonexisting_instances(files)
-        lst = extract_instances(dir, files)
-        dupes = find_duplicates(lst, self.chb_archetype.isChecked())
-        self.statusbar.showMessage(f"Found {len(dupes)} duplicates")
-        self.txt_result.clear()
-        for dupe in dupes:
-            self.txt_result.append(dupe)
-
-
-    def _get_all_instances(self):
+    def _get_all_instance_ids(self):
         l = []
         d = self._load_from_cache(CACHE_USER_PROFILE_INV)
         if d:
@@ -316,11 +296,45 @@ class MyMainWindow(QMainWindow):
 
 
     def _remove_nonexisting_instances(self, files):
-        instances = self._get_all_instances()
+        iids = self._get_all_instance_ids()
         for f in files:
-            iid = f[26:-5]
-            if iid not in instances:
+            iid = f[26:-5]  # extract instance id from file name
+            if iid not in iids:
                 print(f"Remove: {f}")
+                # TODO: remove file, which instanceid is not in inventory anymore
+
+
+    def _slot_find_btn(self):
+        # get picked armor type
+        at = ItemSubType(self.cmb_armor_type.currentIndex() + ItemSubType.ArmorHelmet.value)
+        print(f"FIND: {at}")
+        # check armor type and prepare downloading info
+        download_filter = None
+        download_name = None
+        match at:
+            case ItemSubType.ArmorHelmet:    download_filter = constants.helmets    ; download_name = "helmets"
+            case ItemSubType.ArmorGauntlets: download_filter = constants.gauntlets  ; download_name = "gauntlets"
+            case ItemSubType.ArmorChest:     download_filter = constants.chests     ; download_name = "chests"
+            case ItemSubType.ArmorLegs:      download_filter = constants.legs       ; download_name = "legs"
+            case ItemSubType.ArmorClassItem: download_filter = constants.class_items; download_name = "class_items"
+            case _: raise Exception("Unexpected armor type!")
+        # clear current data
+        self.txt_result.clear()
+        self.inv_instances.clear()
+        self.inv_duplicates.clear()
+        # download instances
+        self._get_instanced_items_info(download_filter, download_name)
+        # process downloaded instances
+        dir, files = files_for_armor_type(at)
+        if len(files) == 0:
+            print("No instanced items found!")
+            return
+        self._remove_nonexisting_instances(files)
+        self.inv_instances = extract_instances(dir, files)
+        self.inv_duplicates = find_duplicates(self.inv_instances, self.chb_archetype.isChecked())
+        self.statusbar.showMessage(f"Found {len(self.inv_duplicates)} duplicates")
+        for dupe in self.inv_duplicates:
+            self.txt_result.append(f"id:{self.inv_instances[dupe[0]].instanceId} or id:{self.inv_instances[dupe[1]].instanceId}")
 
 
 ################################################################################

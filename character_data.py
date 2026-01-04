@@ -1,33 +1,9 @@
-from bungie_api import CharacterClass, CharacterStats, ItemState, ItemType, ItemSubType, DamageType, AmmoType
+from bungie_api import CharacterClass, CharacterStats, ItemState, ItemType, ItemSubType, DamageType
+from item_data import WeaponData, ArmorData
 
 BASE_URL = "https://www.bungie.net"
 
 
-################################################################################
-class ItemData:
-    def __init__(self) -> None:
-        self.state = 0
-        self.icon = ""
-        self.seasonOverlayIcon = ""
-        self.name = ""
-        self.tierAndType = ""
-
-
-################################################################################
-class WeaponData(ItemData):
-    def __init__(self) -> None:
-        super().__init__()
-        self.ammoType: AmmoType = AmmoType.NoType
-        self.damageType: DamageType = DamageType.NoType
-
-
-################################################################################
-class ArmorData(ItemData):
-    def __init__(self) -> None:
-        super().__init__()
-
-
-################################################################################
 class CharacterData:
     def __init__(self, idx) -> None:
         self.idx = idx
