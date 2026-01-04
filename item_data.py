@@ -34,6 +34,14 @@ class ArmorData(ItemData):
         self.stat_weapons = 0
         self.pattern = "000000"
 
+    def total(self):
+        return (self.stat_health +
+                self.stat_melee +
+                self.stat_grenade +
+                self.stat_super +
+                self.stat_class +
+                self.stat_weapons)
+
     def get_str1(self):
         return (f"{str(self.hash):15}"
               + f"{str(self.instanceId):25}"

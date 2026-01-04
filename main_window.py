@@ -48,6 +48,7 @@ class MyMainWindow(QMainWindow):
         self.frm_mid.setLayout(layout)
 
         self.btn_find.clicked.connect(self._slot_find_btn)
+        self.lst_result.currentTextChanged.connect(self._slot_list_select)
 
         self.secrets = MySecrets()
         self.oauth = MyOAuth(self.secrets)
@@ -319,7 +320,7 @@ class MyMainWindow(QMainWindow):
             case ItemSubType.ArmorClassItem: download_filter = constants.class_items; download_name = "class_items"
             case _: raise Exception("Unexpected armor type!")
         # clear current data
-        self.txt_result.clear()
+        self.lst_result.clear()
         self.inv_instances.clear()
         self.inv_duplicates.clear()
         # download instances
@@ -334,7 +335,51 @@ class MyMainWindow(QMainWindow):
         self.inv_duplicates = find_duplicates(self.inv_instances, self.chb_archetype.isChecked())
         self.statusbar.showMessage(f"Found {len(self.inv_duplicates)} duplicates")
         for dupe in self.inv_duplicates:
-            self.txt_result.append(f"id:{self.inv_instances[dupe[0]].instanceId} or id:{self.inv_instances[dupe[1]].instanceId}")
+            self.lst_result.addItem(f"id:{self.inv_instances[dupe[0]].instanceId} or id:{self.inv_instances[dupe[1]].instanceId}")
+
+
+    def _slot_list_select(self, text):
+        idx = self.lst_result.currentRow()
+        i = self.inv_duplicates[idx][0]
+        j = self.inv_duplicates[idx][1]
+        # print(f"List index {idx}: {i} - {j}")
+        self.txt_dim_query.setText(text)
+        self.txt_item1.clear()
+        self.txt_item2.clear()
+        # Show stats
+        # NOTE: max is 42: ##########################################
+        # 1
+        self.txt_item1.append(f"""
+<html>
+<h2>{self.inv_instances[i].archetype}</h2>
+<h3>Tier: {'*' * self.inv_instances[i].tier}</h3>
+<table width="100%" border="1">
+<tr><td width="10%">{self.inv_instances[i].stat_health }</td><td>{'█' * self.inv_instances[i].stat_health }</td></tr>
+<tr><td width="10%">{self.inv_instances[i].stat_melee  }</td><td>{'█' * self.inv_instances[i].stat_melee  }</td></tr>
+<tr><td width="10%">{self.inv_instances[i].stat_grenade}</td><td>{'█' * self.inv_instances[i].stat_grenade}</td></tr>
+<tr><td width="10%">{self.inv_instances[i].stat_super  }</td><td>{'█' * self.inv_instances[i].stat_super  }</td></tr>
+<tr><td width="10%">{self.inv_instances[i].stat_class  }</td><td>{'█' * self.inv_instances[i].stat_class  }</td></tr>
+<tr><td width="10%">{self.inv_instances[i].stat_weapons}</td><td>{'█' * self.inv_instances[i].stat_weapons}</td></tr>
+</table>
+<h3>Total {self.inv_instances[i].total()}</h3>
+</html>
+""")
+        # 2
+        self.txt_item2.append(f"""
+<html>
+<h2>{self.inv_instances[j].archetype}</h2>
+<h3>Tier: {'*' * self.inv_instances[j].tier}</h3>
+<table width="100%" border="1">
+<tr><td width="10%">{self.inv_instances[j].stat_health }</td><td>{'█' * self.inv_instances[j].stat_health }</td></tr>
+<tr><td width="10%">{self.inv_instances[j].stat_melee  }</td><td>{'█' * self.inv_instances[j].stat_melee  }</td></tr>
+<tr><td width="10%">{self.inv_instances[j].stat_grenade}</td><td>{'█' * self.inv_instances[j].stat_grenade}</td></tr>
+<tr><td width="10%">{self.inv_instances[j].stat_super  }</td><td>{'█' * self.inv_instances[j].stat_super  }</td></tr>
+<tr><td width="10%">{self.inv_instances[j].stat_class  }</td><td>{'█' * self.inv_instances[j].stat_class  }</td></tr>
+<tr><td width="10%">{self.inv_instances[j].stat_weapons}</td><td>{'█' * self.inv_instances[j].stat_weapons}</td></tr>
+</table>
+<h3>Total {self.inv_instances[j].total()}</h3>
+</html>
+""")
 
 
 ################################################################################
