@@ -5,6 +5,7 @@ class ItemData:
     def __init__(self) -> None:
         self.hash = 0
         self.instanceId = 0
+        self.power = 0
         self.tier = 0
         self.state = 0
         self.icon = ""

@@ -59,6 +59,7 @@ def extract_instances(dir, files):
             item = ArmorData()
             item.hash = data["Response"]["item"]["data"]["itemHash"]
             item.instanceId = data["Response"]["item"]["data"]["itemInstanceId"]
+            item.power = data["Response"]["instance"]["data"]["primaryStat"]["value"]
             item.tier = tier
             # extract stats and find max
             max = 0

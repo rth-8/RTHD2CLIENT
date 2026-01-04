@@ -351,7 +351,8 @@ class MyMainWindow(QMainWindow):
         # 1
         self.txt_item1.append(f"""
 <html>
-<h2>{self.inv_instances[i].archetype}</h2>
+<h2>{self.inv_instances[i].power}</h2>
+<h3>{self.inv_instances[i].archetype}</h3>
 <h3>Tier: {'*' * self.inv_instances[i].tier}</h3>
 <table width="100%" border="1">
 <tr><td width="10%">{self.inv_instances[i].stat_health }</td><td>{'█' * self.inv_instances[i].stat_health }</td></tr>
@@ -367,7 +368,8 @@ class MyMainWindow(QMainWindow):
         # 2
         self.txt_item2.append(f"""
 <html>
-<h2>{self.inv_instances[j].archetype}</h2>
+<h2>{self.inv_instances[j].power}</h2>
+<h3>{self.inv_instances[j].archetype}</h3>
 <h3>Tier: {'*' * self.inv_instances[j].tier}</h3>
 <table width="100%" border="1">
 <tr><td width="10%">{self.inv_instances[j].stat_health }</td><td>{'█' * self.inv_instances[j].stat_health }</td></tr>
