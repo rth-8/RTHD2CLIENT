@@ -5,6 +5,7 @@ import os
 import json
 from bungie_api import CharacterStats, ItemSubType
 from item_data import ArmorData
+import constants
 
 
 def map_archetype(stat: CharacterStats):
@@ -16,6 +17,29 @@ def map_archetype(stat: CharacterStats):
         case CharacterStats.Class: return "Specialist"
         case CharacterStats.Weapons: return "Gunner"
         case _: return "???"
+
+
+def map_armor_piece(hash):
+    stype = ItemSubType.NoType
+    name = "???"
+    if hash in constants.helmets:
+        stype = ItemSubType.ArmorHelmet
+        name = constants.helmets.get(hash)
+    elif hash in constants.gauntlets:
+        stype = ItemSubType.ArmorGauntlets
+        name = constants.gauntlets.get(hash)
+    elif hash in constants.chests:
+        stype = ItemSubType.ArmorChest
+        name = constants.chests.get(hash)
+    elif hash in constants.legs:
+        stype = ItemSubType.ArmorLegs
+        name = constants.legs.get(hash)
+    elif hash in constants.class_items:
+        stype = ItemSubType.ArmorClassItem
+        name = constants.class_items.get(hash)
+    # else:
+    #     raise Exception("Unexpected armor type!")
+    return stype, name
 
 
 def get_stat(data, stat: CharacterStats, max, max_stat: CharacterStats):
@@ -58,6 +82,7 @@ def extract_instances(dir, files):
             # make armor item
             item = ArmorData()
             item.hash = data["Response"]["item"]["data"]["itemHash"]
+            item.subtype, item.name = map_armor_piece(item.hash)
             item.instanceId = data["Response"]["item"]["data"]["itemInstanceId"]
             item.power = data["Response"]["instance"]["data"]["primaryStat"]["value"]
             item.tier = tier

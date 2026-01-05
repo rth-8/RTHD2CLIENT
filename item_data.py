@@ -1,4 +1,4 @@
-from bungie_api import DamageType, AmmoType
+from bungie_api import ItemSubType, DamageType, AmmoType
 
 ################################################################################
 class ItemData:
@@ -26,6 +26,7 @@ class WeaponData(ItemData):
 class ArmorData(ItemData):
     def __init__(self) -> None:
         super().__init__()
+        self.subtype = ItemSubType.NoType
         self.archetype = ""
         self.stat_health  = 0
         self.stat_melee   = 0
@@ -54,4 +55,6 @@ class ArmorData(ItemData):
               + f"{str(self.stat_super):5}"
               + f"{str(self.stat_class):5}"
               + f"{str(self.stat_weapons):5}"
-              + f"{self.pattern:10}")
+              + f"{self.pattern:10}"
+            #   + f"{self.name}"
+              )

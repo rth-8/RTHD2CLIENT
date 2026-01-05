@@ -336,6 +336,9 @@ class MyMainWindow(QMainWindow):
         self.statusbar.showMessage(f"Found {len(self.inv_duplicates)} duplicates")
         for dupe in self.inv_duplicates:
             self.lst_result.addItem(f"id:{self.inv_instances[dupe[0]].instanceId} or id:{self.inv_instances[dupe[1]].instanceId}")
+        self.txt_dim_query.clear()
+        self.txt_item1.clear()
+        self.txt_item2.clear()
 
 
     def _slot_list_select(self, text):
@@ -351,6 +354,7 @@ class MyMainWindow(QMainWindow):
         # 1
         self.txt_item1.append(f"""
 <html>
+<h1>{self.inv_instances[i].name}</h1>
 <h2>{self.inv_instances[i].power}</h2>
 <h3>{self.inv_instances[i].archetype}</h3>
 <h3>Tier: {'*' * self.inv_instances[i].tier}</h3>
@@ -368,6 +372,7 @@ class MyMainWindow(QMainWindow):
         # 2
         self.txt_item2.append(f"""
 <html>
+<h1>{self.inv_instances[j].name}</h1>
 <h2>{self.inv_instances[j].power}</h2>
 <h3>{self.inv_instances[j].archetype}</h3>
 <h3>Tier: {'*' * self.inv_instances[j].tier}</h3>
