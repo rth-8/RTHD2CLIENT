@@ -64,63 +64,94 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>1255</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
+         <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,2,6">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Armor type</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="cmb_armor_type">
+            <item>
+             <property name="text">
+              <string>Helmet</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Gauntlets</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Chest</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Legs</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Class Item</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>1255</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </item>
         <item>
-         <widget class="QComboBox" name="cmb_armor_type">
+         <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,0,0">
           <item>
-           <property name="text">
-            <string>Helmet</string>
-           </property>
+           <widget class="QCheckBox" name="chb_set">
+            <property name="text">
+             <string>Use set</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
           <item>
-           <property name="text">
-            <string>Gauntlets</string>
-           </property>
+           <widget class="QCheckBox" name="chb_archetype">
+            <property name="text">
+             <string>Use archetype</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
           <item>
-           <property name="text">
-            <string>Chest</string>
-           </property>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
-          <item>
-           <property name="text">
-            <string>Legs</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Class Item</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Armor type</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="chb_archetype">
-          <property name="text">
-           <string>Use archetype</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
+         </layout>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">

@@ -332,7 +332,7 @@ class MyMainWindow(QMainWindow):
             return
         self._remove_nonexisting_instances(files)
         self.inv_instances = extract_instances(dir, files)
-        self.inv_duplicates = find_duplicates(self.inv_instances, self.chb_archetype.isChecked())
+        self.inv_duplicates = find_duplicates(self.inv_instances, self.chb_set.isChecked(), self.chb_archetype.isChecked())
         self.statusbar.showMessage(f"Found {len(self.inv_duplicates)} duplicates")
         for dupe in self.inv_duplicates:
             self.lst_result.addItem(f"id:{self.inv_instances[dupe[0]].instanceId} or id:{self.inv_instances[dupe[1]].instanceId}")

@@ -111,7 +111,7 @@ def extract_instances(dir, files):
     return instances
 
 
-def find_duplicates(instances, use_archetype=True):
+def find_duplicates(instances, use_armor_set=True, use_archetype=True):
     size = len(instances)
     dupes = []
     for i in range(0, size-1, 1):
@@ -125,17 +125,27 @@ def find_duplicates(instances, use_archetype=True):
             # 3. pattern
             idx1 = None
             idx2 = None
-            if use_archetype:
+            if use_armor_set and use_archetype:
                 if instances[i].hash == instances[j].hash and \
                    instances[i].archetype == instances[j].archetype and \
                    instances[i].pattern == instances[j].pattern:
                     idx1 = i
                     idx2 = j
-            else:
+            elif use_armor_set and not use_archetype:
                 if instances[i].hash == instances[j].hash and \
                    instances[i].pattern == instances[j].pattern:
                     idx1 = i
                     idx2 = j
+            elif not use_armor_set and use_archetype:
+                if instances[i].archetype == instances[j].archetype and \
+                   instances[i].pattern == instances[j].pattern:
+                    idx1 = i
+                    idx2 = j
+            else: # pattern only
+                if instances[i].pattern == instances[j].pattern:
+                    idx1 = i
+                    idx2 = j
+            # Found?
             if idx1 and idx2:
                 print("-----------------------------------------")
                 print_item(instances[i], 0, "")
