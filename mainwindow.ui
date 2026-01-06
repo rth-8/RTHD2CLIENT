@@ -227,12 +227,27 @@
     </property>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuInventory">
+    <property name="title">
+     <string>Inventory</string>
+    </property>
+    <addaction name="actionInventoryRefresh"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuInventory"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionInventoryRefresh">
+   <property name="text">
+    <string>Refresh</string>
+   </property>
+   <property name="toolTip">
+    <string>Refresh Inventory</string>
    </property>
   </action>
  </widget>

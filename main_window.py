@@ -37,6 +37,7 @@ class MyMainWindow(QMainWindow):
         self.setWindowTitle("RTH D2 client")
 
         self.actionExit.triggered.connect(self.close)
+        self.actionInventoryRefresh.triggered.connect(self._refresh_inventory)
 
         self.webview = QWebEngineView()
         self.webview.urlChanged.connect(self._url_changed)
@@ -214,9 +215,7 @@ class MyMainWindow(QMainWindow):
             print("Get user profile...")
             url = USER_PROFILE.format(API_ROOT, self.userData.membershipType, self.userData.membershipId)
             self._download_and_save(url, CACHE_USER_PROFILE)
-            print("Get user profile inventory...")
-            url = USER_PROFILE_INV.format(API_ROOT, self.userData.membershipType, self.userData.membershipId)
-            self._download_and_save(url, CACHE_USER_PROFILE_INV)
+            self._get_inventory()
 
         # get character infos
         d = self._load_from_cache(CACHE_USER_PROFILE)
@@ -296,13 +295,31 @@ class MyMainWindow(QMainWindow):
         return l
 
 
+    def _delete_cached_instance(self, fpath):
+        if os.path.exists(fpath):
+            print(f"Delete: {fpath}")
+            os.remove(fpath)
+            return True
+        return False
+
+
     def _remove_nonexisting_instances(self, files):
         iids = self._get_all_instance_ids()
         for f in files:
             iid = f[26:-5]  # extract instance id from file name
             if iid not in iids:
                 print(f"Remove: {f}")
-                # TODO: remove file, which instanceid is not in inventory anymore
+                # remove file, which instance id is not in inventory anymore
+                if self._delete_cached_instance(f"./cache/helmets/{f}"):
+                    continue
+                if self._delete_cached_instance(f"./cache/gauntlets/{f}"):
+                    continue
+                if self._delete_cached_instance(f"./cache/chests/{f}"):
+                    continue
+                if self._delete_cached_instance(f"./cache/legs/{f}"):
+                    continue
+                if self._delete_cached_instance(f"./cache/class_items/{f}"):
+                    continue
 
 
     def _slot_find_btn(self):
@@ -326,11 +343,18 @@ class MyMainWindow(QMainWindow):
         # download instances
         self._get_instanced_items_info(download_filter, download_name)
         # process downloaded instances
+        # get all instance files from sub-dir for given armor type
         dir, files = files_for_armor_type(at)
         if len(files) == 0:
             print("No instanced items found!")
             return
+        # try delete any instance file, which id is not in current inventory json
         self._remove_nonexisting_instances(files)
+        # get all files from sub-dir again, this time without deleted files
+        dir, files = files_for_armor_type(at)
+        if len(files) == 0:
+            print("No instanced items found!")
+            return
         self.inv_instances = extract_instances(dir, files)
         self.inv_duplicates = find_duplicates(self.inv_instances, self.chb_set.isChecked(), self.chb_archetype.isChecked())
         self.statusbar.showMessage(f"Found {len(self.inv_duplicates)} duplicates")
@@ -387,6 +411,19 @@ class MyMainWindow(QMainWindow):
 <h3>Total {self.inv_instances[j].total()}</h3>
 </html>
 """)
+
+
+    def _get_inventory(self):
+        print("Get user profile inventory...")
+        url = USER_PROFILE_INV.format(API_ROOT, self.userData.membershipType, self.userData.membershipId)
+        self._download_and_save(url, CACHE_USER_PROFILE_INV)
+
+
+    def _refresh_inventory(self):
+        if os.path.exists(CACHE_USER_PROFILE_INV):
+            print(f"Delete inventory...")
+            os.remove(CACHE_USER_PROFILE_INV)
+        self._get_inventory()
 
 
 ################################################################################
