@@ -3,6 +3,7 @@ cache/
 cert/
 token/
 tmp/
+myenv/
 .env
 mainwindow_ui.py
 *.log
