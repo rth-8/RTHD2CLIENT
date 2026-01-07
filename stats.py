@@ -86,6 +86,7 @@ def extract_instances(dir, files):
             item.instanceId = data["Response"]["item"]["data"]["itemInstanceId"]
             item.power = data["Response"]["instance"]["data"]["primaryStat"]["value"]
             item.tier = tier
+            item.state = data["Response"]["item"]["data"]["state"]
             # extract stats and find max
             max = 0
             max_stat = None

@@ -10,7 +10,7 @@ import json
 import constants
 from my_secrets import MySecrets
 from my_oauth import MyOAuth
-from bungie_api import ComponentCharacter, ComponentItem, ItemSubType
+from bungie_api import ComponentCharacter, ComponentItem, ItemSubType, ItemState
 from user_data import UserData
 from character_data import CharacterData
 import pages
@@ -50,6 +50,8 @@ class MyMainWindow(QMainWindow):
 
         self.btn_find.clicked.connect(self._slot_find_btn)
         self.lst_result.currentTextChanged.connect(self._slot_list_select)
+        self.btn_lock_item1.clicked.connect(self._slot_btn_lock_item1)
+        self.btn_lock_item2.clicked.connect(self._slot_btn_lock_item2)
 
         self.secrets = MySecrets()
         self.oauth = MyOAuth(self.secrets)
@@ -58,6 +60,8 @@ class MyMainWindow(QMainWindow):
 
         self.inv_instances = []
         self.inv_duplicates = []
+        self.selected_idx1 = -1
+        self.selected_idx2 = -1
 
         if not self.oauth.session.authorized:
             link = self.oauth.start_oauth()
@@ -365,6 +369,13 @@ class MyMainWindow(QMainWindow):
         self.txt_item2.clear()
 
 
+    def _toggle_lock_btn_text(self, btn, item):
+        if item.state & ItemState.Locked.value:
+            btn.setText("Unlock")
+        else:
+            btn.setText("Lock")
+
+
     def _slot_list_select(self, text):
         idx = self.lst_result.currentRow()
         i = self.inv_duplicates[idx][0]
@@ -373,9 +384,13 @@ class MyMainWindow(QMainWindow):
         self.txt_dim_query.setText(text)
         self.txt_item1.clear()
         self.txt_item2.clear()
+        self.selected_idx1 = -1
+        self.selected_idx2 = -1
         # Show stats
         # NOTE: max is 42: ##########################################
         # 1
+        self.selected_idx1 = i
+        self._toggle_lock_btn_text(self.btn_lock_item1, self.inv_instances[i])
         self.txt_item1.append(f"""
 <html>
 <h1>{self.inv_instances[i].name}</h1>
@@ -394,6 +409,8 @@ class MyMainWindow(QMainWindow):
 </html>
 """)
         # 2
+        self.selected_idx2 = j
+        self._toggle_lock_btn_text(self.btn_lock_item2, self.inv_instances[j])
         self.txt_item2.append(f"""
 <html>
 <h1>{self.inv_instances[j].name}</h1>
@@ -424,6 +441,59 @@ class MyMainWindow(QMainWindow):
             print(f"Delete inventory...")
             os.remove(CACHE_USER_PROFILE_INV)
         self._get_inventory()
+
+
+    def _toggle_instance_lock_state(self, idx, btn):
+        if idx > -1:
+            iid = self.inv_instances[idx].instanceId
+            print(f"Instance: {iid}")
+            state = self.inv_instances[idx].state & ItemState.Locked.value
+            print(f"Locked: {state}")
+            # Prepare DestinyItemStateRequest struct for SetLockState POST request
+            # NOTE: for whatever reason, SetLockState requires membership type and loged-in charcter id (wtf???)
+            data = {
+                "state": not state,
+                "itemId": iid,
+                "characterId": "2305843009315334455",
+                "membershipType": self.userData.membershipType
+            }
+            url = f"{API_ROOT}/Destiny2/Actions/Items/SetLockState/"
+            # NOTE: json argument must NOT be already made json structure, but just dictionary.
+            # This is because 'post' does serialization by itself, so if already made json is provided, 
+            # double serialization happens and that corrupts the final json structure.
+            r = self.oauth.session.post(url, headers={"X-API-Key": self.secrets.api_key, "Content-Type": "application/json"}, json=data)
+            print(f"Response status: {r.status_code}")
+            # print(r.request.body)
+            # print(r.request.headers)
+            # print(r.json())
+            if r.status_code == 200:
+                # toggle state
+                self.inv_instances[idx].state = self.inv_instances[idx].state ^ ItemState.Locked.value
+                self._toggle_lock_btn_text(btn, self.inv_instances[idx])
+                dir = ""
+                match self.inv_instances[idx].subtype:
+                    case ItemSubType.ArmorHelmet:    dir = "helmets"
+                    case ItemSubType.ArmorGauntlets: dir = "gauntlets"
+                    case ItemSubType.ArmorChest:     dir = "chests"
+                    case ItemSubType.ArmorLegs:      dir = "legs"
+                    case ItemSubType.ArmorClassItem: dir = "class_items"
+                    case _: raise Exception("Unexpected armor type!")
+                fpath = f"./cache/{dir}/user_profile_inv_instance_{self.inv_instances[idx].instanceId}.json"
+                json_data = None
+                with open(fpath, "r") as file:
+                    json_data = json.load(file)
+                if json_data:
+                    json_data["Response"]["item"]["data"]["state"] = self.inv_instances[idx].state
+                    with open(fpath, "w") as file:
+                        json.dump(json_data, file)
+
+
+    def _slot_btn_lock_item1(self):
+        self._toggle_instance_lock_state(self.selected_idx1, self.btn_lock_item1)
+
+
+    def _slot_btn_lock_item2(self):
+        self._toggle_instance_lock_state(self.selected_idx2, self.btn_lock_item2)
 
 
 ################################################################################
