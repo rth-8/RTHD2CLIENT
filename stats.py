@@ -157,6 +157,13 @@ def find_duplicates(instances, use_armor_set=True, use_archetype=True):
     return dupes
 
 
+def save_duplicates_to_file(instances, duplicates, fileName):
+    with open(fileName, 'w') as file:
+        for dupe in duplicates:
+            file.write(f"id:{instances[dupe[0]].instanceId} or id:{instances[dupe[1]].instanceId}")
+            file.write('\n')
+
+
 #################################################################################################################################
 
 if __name__ == '__main__':
@@ -174,7 +181,4 @@ if __name__ == '__main__':
     print(f"Found {len(duplicates)} duplicates")
     print(duplicates)
 
-    with open("duplicates.log", 'w') as file:
-        for dupe in duplicates:
-            file.write(f"id:{instances[dupe[0]].instanceId} or id:{instances[dupe[1]].instanceId}")
-            file.write('\n')
+    save_duplicates_to_file(instances, duplicates, "duplicates.log")

@@ -1,11 +1,12 @@
 from PyQt6 import uic
-from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QSizePolicy
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QSizePolicy, QFileDialog
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtCore import QUrl
 
 import sys
 import os
 import json
+import pyperclip
 
 import constants
 from my_secrets import MySecrets
@@ -14,7 +15,7 @@ from bungie_api import ComponentCharacter, ComponentItem, ItemSubType, ItemState
 from user_data import UserData
 from character_data import CharacterData
 import pages
-from stats import files_for_armor_type, extract_instances, find_duplicates
+from stats import files_for_armor_type, extract_instances, find_duplicates, save_duplicates_to_file
 
 
 API_ROOT = "https://www.bungie.net/Platform"
@@ -34,7 +35,6 @@ class MyMainWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
         uic.loadUi("mainwindow.ui", self)
-        self.setWindowTitle("RTH D2 client")
 
         self.actionExit.triggered.connect(self.close)
         self.actionInventoryRefresh.triggered.connect(self._refresh_inventory)
@@ -52,6 +52,9 @@ class MyMainWindow(QMainWindow):
         self.lst_result.currentTextChanged.connect(self._slot_list_select)
         self.btn_lock_item1.clicked.connect(self._slot_btn_lock_item1)
         self.btn_lock_item2.clicked.connect(self._slot_btn_lock_item2)
+        self.btn_clear_all.clicked.connect(self._slot_btn_clear_all)
+        self.btn_save_to_file.clicked.connect(self._slot_btn_save_to_file)
+        self.btn_dim_query_copy.clicked.connect(self._slot_btn_dim_query_copy)
 
         self.secrets = MySecrets()
         self.oauth = MyOAuth(self.secrets)
@@ -326,6 +329,19 @@ class MyMainWindow(QMainWindow):
                     continue
 
 
+    def _slot_btn_clear_all(self):
+        self.lst_result.clear()
+        self.inv_instances.clear()
+        self.inv_duplicates.clear()
+        self.selected_idx1 = -1
+        self.selected_idx2 = -1
+        self.txt_dim_query.clear()
+        self.btn_lock_item1.setText("???")
+        self.btn_lock_item2.setText("???")
+        self.txt_item1.clear()
+        self.txt_item2.clear()
+
+
     def _slot_find_btn(self):
         # get picked armor type
         at = ItemSubType(self.cmb_armor_type.currentIndex() + ItemSubType.ArmorHelmet.value)
@@ -341,9 +357,7 @@ class MyMainWindow(QMainWindow):
             case ItemSubType.ArmorClassItem: download_filter = constants.class_items; download_name = "class_items"
             case _: raise Exception("Unexpected armor type!")
         # clear current data
-        self.lst_result.clear()
-        self.inv_instances.clear()
-        self.inv_duplicates.clear()
+        self._slot_btn_clear_all()
         # download instances
         self._get_instanced_items_info(download_filter, download_name)
         # process downloaded instances
@@ -364,9 +378,6 @@ class MyMainWindow(QMainWindow):
         self.statusbar.showMessage(f"Found {len(self.inv_duplicates)} duplicates")
         for dupe in self.inv_duplicates:
             self.lst_result.addItem(f"id:{self.inv_instances[dupe[0]].instanceId} or id:{self.inv_instances[dupe[1]].instanceId}")
-        self.txt_dim_query.clear()
-        self.txt_item1.clear()
-        self.txt_item2.clear()
 
 
     def _toggle_lock_btn_text(self, btn, item):
@@ -394,16 +405,17 @@ class MyMainWindow(QMainWindow):
         self.txt_item1.append(f"""
 <html>
 <h1>{self.inv_instances[i].name}</h1>
+({self.inv_instances[i].instanceId})
 <h2>{self.inv_instances[i].power}</h2>
 <h3>{self.inv_instances[i].archetype}</h3>
-<h3>Tier: {'*' * self.inv_instances[i].tier}</h3>
+<h3>Tier: {'*' * self.inv_instances[i].tier} ({self.inv_instances[i].tier})</h3>
 <table width="100%" border="1">
 <tr><td width="10%">{self.inv_instances[i].stat_health }</td><td>{'█' * self.inv_instances[i].stat_health }</td></tr>
 <tr><td width="10%">{self.inv_instances[i].stat_melee  }</td><td>{'█' * self.inv_instances[i].stat_melee  }</td></tr>
 <tr><td width="10%">{self.inv_instances[i].stat_grenade}</td><td>{'█' * self.inv_instances[i].stat_grenade}</td></tr>
 <tr><td width="10%">{self.inv_instances[i].stat_super  }</td><td>{'█' * self.inv_instances[i].stat_super  }</td></tr>
 <tr><td width="10%">{self.inv_instances[i].stat_class  }</td><td>{'█' * self.inv_instances[i].stat_class  }</td></tr>
-<tr><td width="10%">{self.inv_instances[i].stat_weapons}</td><td>{'█' * self.inv_instances[i].stat_weapons}</td></tr>
+<tr><td width="10%">{self.inv_instances[i].stat_weapons}</td><td>{'█' * self.inv_instances[i].stat_weapons}&nbsp;</td></tr>
 </table>
 <h3>Total {self.inv_instances[i].total()}</h3>
 </html>
@@ -414,16 +426,17 @@ class MyMainWindow(QMainWindow):
         self.txt_item2.append(f"""
 <html>
 <h1>{self.inv_instances[j].name}</h1>
+({self.inv_instances[j].instanceId})
 <h2>{self.inv_instances[j].power}</h2>
 <h3>{self.inv_instances[j].archetype}</h3>
-<h3>Tier: {'*' * self.inv_instances[j].tier}</h3>
+<h3>Tier: {'*' * self.inv_instances[j].tier} ({self.inv_instances[j].tier})</h3>
 <table width="100%" border="1">
 <tr><td width="10%">{self.inv_instances[j].stat_health }</td><td>{'█' * self.inv_instances[j].stat_health }</td></tr>
 <tr><td width="10%">{self.inv_instances[j].stat_melee  }</td><td>{'█' * self.inv_instances[j].stat_melee  }</td></tr>
 <tr><td width="10%">{self.inv_instances[j].stat_grenade}</td><td>{'█' * self.inv_instances[j].stat_grenade}</td></tr>
 <tr><td width="10%">{self.inv_instances[j].stat_super  }</td><td>{'█' * self.inv_instances[j].stat_super  }</td></tr>
 <tr><td width="10%">{self.inv_instances[j].stat_class  }</td><td>{'█' * self.inv_instances[j].stat_class  }</td></tr>
-<tr><td width="10%">{self.inv_instances[j].stat_weapons}</td><td>{'█' * self.inv_instances[j].stat_weapons}</td></tr>
+<tr><td width="10%">{self.inv_instances[j].stat_weapons}</td><td>{'█' * self.inv_instances[j].stat_weapons}&nbsp;</td></tr>
 </table>
 <h3>Total {self.inv_instances[j].total()}</h3>
 </html>
@@ -489,11 +502,25 @@ class MyMainWindow(QMainWindow):
 
 
     def _slot_btn_lock_item1(self):
-        self._toggle_instance_lock_state(self.selected_idx1, self.btn_lock_item1)
+        if self.selected_idx1 > -1:
+            self._toggle_instance_lock_state(self.selected_idx1, self.btn_lock_item1)
 
 
     def _slot_btn_lock_item2(self):
-        self._toggle_instance_lock_state(self.selected_idx2, self.btn_lock_item2)
+        if self.selected_idx2 > -1:
+            self._toggle_instance_lock_state(self.selected_idx2, self.btn_lock_item2)
+
+
+    def _slot_btn_save_to_file(self):
+        if len(self.inv_duplicates) > 0:
+            r = QFileDialog.getSaveFileName(self, "Save", ".", "*.txt")
+            if len(r[0]) > 0:
+                save_duplicates_to_file(self.inv_instances, self.inv_duplicates, r[0])
+
+
+    def _slot_btn_dim_query_copy(self):
+        # copy DIM query to clipboard
+        pyperclip.copy(self.txt_dim_query.text())
 
 
 ################################################################################
