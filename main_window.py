@@ -11,11 +11,12 @@ import pyperclip
 import constants
 from my_secrets import MySecrets
 from my_oauth import MyOAuth
-from bungie_api import ComponentCharacter, ComponentItem, ItemSubType, ItemState
+from bungie_api import ComponentCharacter, ComponentItem, ItemSubType, ItemState, CharacterStats
 from user_data import UserData
 from character_data import CharacterData
 import pages
 from stats import files_for_armor_type, extract_instances, find_duplicates, save_duplicates_to_file
+import local_images
 
 
 API_ROOT = "https://www.bungie.net/Platform"
@@ -387,6 +388,21 @@ class MyMainWindow(QMainWindow):
             btn.setText("Lock")
 
 
+    def _map_colors(self, val1, val2):
+        col1 = "black"
+        col2 = "black"
+        if val1 > val2:
+            col1 = "green"
+            col2 = "red"
+        elif val1 < val2:
+            col1 = "red"
+            col2 = "green"
+        else:
+            col1 = "blue"
+            col2 = "blue"
+        return col1, col2
+
+
     def _slot_list_select(self, text):
         idx = self.lst_result.currentRow()
         i = self.inv_duplicates[idx][0]
@@ -399,6 +415,12 @@ class MyMainWindow(QMainWindow):
         self.selected_idx2 = -1
         # Show stats
         # NOTE: max is 42: ##########################################
+        hc1, hc2 = self._map_colors(self.inv_instances[i].stat_health , self.inv_instances[j].stat_health )
+        mc1, mc2 = self._map_colors(self.inv_instances[i].stat_melee  , self.inv_instances[j].stat_melee  )
+        gc1, gc2 = self._map_colors(self.inv_instances[i].stat_grenade, self.inv_instances[j].stat_grenade)
+        sc1, sc2 = self._map_colors(self.inv_instances[i].stat_super  , self.inv_instances[j].stat_super  )
+        cc1, cc2 = self._map_colors(self.inv_instances[i].stat_class  , self.inv_instances[j].stat_class  )
+        wc1, wc2 = self._map_colors(self.inv_instances[i].stat_weapons, self.inv_instances[j].stat_weapons)
         # 1
         self.selected_idx1 = i
         self._toggle_lock_btn_text(self.btn_lock_item1, self.inv_instances[i])
@@ -410,12 +432,12 @@ class MyMainWindow(QMainWindow):
 <h3>{self.inv_instances[i].archetype}</h3>
 <h3>Tier: {'*' * self.inv_instances[i].tier} ({self.inv_instances[i].tier})</h3>
 <table width="100%" border="1">
-<tr><td width="10%">{self.inv_instances[i].stat_health }</td><td>{'█' * self.inv_instances[i].stat_health }</td></tr>
-<tr><td width="10%">{self.inv_instances[i].stat_melee  }</td><td>{'█' * self.inv_instances[i].stat_melee  }</td></tr>
-<tr><td width="10%">{self.inv_instances[i].stat_grenade}</td><td>{'█' * self.inv_instances[i].stat_grenade}</td></tr>
-<tr><td width="10%">{self.inv_instances[i].stat_super  }</td><td>{'█' * self.inv_instances[i].stat_super  }</td></tr>
-<tr><td width="10%">{self.inv_instances[i].stat_class  }</td><td>{'█' * self.inv_instances[i].stat_class  }</td></tr>
-<tr><td width="10%">{self.inv_instances[i].stat_weapons}</td><td>{'█' * self.inv_instances[i].stat_weapons}&nbsp;</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Health]}"  width="16" height="16"/></td><td width="5%">{self.inv_instances[i].stat_health }</td><td style="color: {hc1};">{'█' * self.inv_instances[i].stat_health }</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Melee]}"   width="16" height="16"/></td><td width="5%">{self.inv_instances[i].stat_melee  }</td><td style="color: {mc1};">{'█' * self.inv_instances[i].stat_melee  }</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Grenade]}" width="16" height="16"/></td><td width="5%">{self.inv_instances[i].stat_grenade}</td><td style="color: {gc1};">{'█' * self.inv_instances[i].stat_grenade}</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Super]}"   width="16" height="16"/></td><td width="5%">{self.inv_instances[i].stat_super  }</td><td style="color: {sc1};">{'█' * self.inv_instances[i].stat_super  }</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Class]}"   width="16" height="16"/></td><td width="5%">{self.inv_instances[i].stat_class  }</td><td style="color: {cc1};">{'█' * self.inv_instances[i].stat_class  }</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Weapons]}" width="16" height="16"/></td><td width="5%">{self.inv_instances[i].stat_weapons}</td><td style="color: {wc1};">{'█' * self.inv_instances[i].stat_weapons}&nbsp;</td></tr>
 </table>
 <h3>Total {self.inv_instances[i].total()}</h3>
 </html>
@@ -431,12 +453,12 @@ class MyMainWindow(QMainWindow):
 <h3>{self.inv_instances[j].archetype}</h3>
 <h3>Tier: {'*' * self.inv_instances[j].tier} ({self.inv_instances[j].tier})</h3>
 <table width="100%" border="1">
-<tr><td width="10%">{self.inv_instances[j].stat_health }</td><td>{'█' * self.inv_instances[j].stat_health }</td></tr>
-<tr><td width="10%">{self.inv_instances[j].stat_melee  }</td><td>{'█' * self.inv_instances[j].stat_melee  }</td></tr>
-<tr><td width="10%">{self.inv_instances[j].stat_grenade}</td><td>{'█' * self.inv_instances[j].stat_grenade}</td></tr>
-<tr><td width="10%">{self.inv_instances[j].stat_super  }</td><td>{'█' * self.inv_instances[j].stat_super  }</td></tr>
-<tr><td width="10%">{self.inv_instances[j].stat_class  }</td><td>{'█' * self.inv_instances[j].stat_class  }</td></tr>
-<tr><td width="10%">{self.inv_instances[j].stat_weapons}</td><td>{'█' * self.inv_instances[j].stat_weapons}&nbsp;</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Health]}"  width="16" height="16"/></td><td width="5%">{self.inv_instances[j].stat_health }</td><td style="color: {hc2};">{'█' * self.inv_instances[j].stat_health }</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Melee]}"   width="16" height="16"/></td><td width="5%">{self.inv_instances[j].stat_melee  }</td><td style="color: {mc2};">{'█' * self.inv_instances[j].stat_melee  }</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Grenade]}" width="16" height="16"/></td><td width="5%">{self.inv_instances[j].stat_grenade}</td><td style="color: {gc2};">{'█' * self.inv_instances[j].stat_grenade}</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Super]}"   width="16" height="16"/></td><td width="5%">{self.inv_instances[j].stat_super  }</td><td style="color: {sc2};">{'█' * self.inv_instances[j].stat_super  }</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Class]}"   width="16" height="16"/></td><td width="5%">{self.inv_instances[j].stat_class  }</td><td style="color: {cc2};">{'█' * self.inv_instances[j].stat_class  }</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Weapons]}" width="16" height="16"/></td><td width="5%">{self.inv_instances[j].stat_weapons}</td><td style="color: {wc2};">{'█' * self.inv_instances[j].stat_weapons}&nbsp;</td></tr>
 </table>
 <h3>Total {self.inv_instances[j].total()}</h3>
 </html>

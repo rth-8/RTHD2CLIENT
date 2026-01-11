@@ -1,61 +1,10 @@
 from user_data import UserData
 from character_data import CharacterData
 from bungie_api import CharacterStats, ItemState, ItemSubType, DamageType, AmmoType
-import base64
+import local_images
 
 
 BASE_URL = "https://www.bungie.net"
-
-stat_icons = {
-    CharacterStats.Health: "html/stat_health.png",
-    CharacterStats.Melee: "html/stat_melee.png",
-    CharacterStats.Grenade: "html/stat_grenade.png",
-    CharacterStats.Super: "html/stat_super.png",
-    CharacterStats.Class: "html/stat_class.png",
-    CharacterStats.Weapons: "html/stat_weapons.png",
-}
-
-ammo_type_icons = {
-    AmmoType.Normal: "html/ammo_primary.png",
-    AmmoType.Special: "html/ammo_special.png",
-    AmmoType.Heavy: "html/ammo_heavy.png",
-}
-
-damage_type_icons = {
-    DamageType.Kinetic: "html/damage_type_kinetic.png",
-    DamageType.Arc: "html/damage_type_arc.png",
-    DamageType.Solar: "html/damage_type_solar.png",
-    DamageType.Void: "html/damage_type_void.png",
-    DamageType.Stasis: "html/damage_type_stasis.png",
-    DamageType.Strand: "html/damage_type_strand.png",
-}
-
-stat_icons_raw_data = {}
-ammo_type_icons_raw_data = {}
-damage_type_icons_raw_data = {}
-
-
-def load_local_image(path: str) -> str:
-    with open(path, "rb") as file:
-        print(f"Loading local image: {path}")
-        raw = file.read()
-        data = base64.b64encode(raw).decode("utf-8")
-        return data
-
-
-def load_local_images():
-    for key in stat_icons.keys():
-        stat_icons_raw_data[key] = load_local_image(stat_icons[key])
-    for key in ammo_type_icons.keys():
-        ammo_type_icons_raw_data[key] = load_local_image(ammo_type_icons[key])
-    for key in damage_type_icons.keys():
-        damage_type_icons_raw_data[key] = load_local_image(damage_type_icons[key])
-
-
-refresh_button_icon_raw_data = load_local_image("html/refresh.png")
-back_button_icon_raw_data = load_local_image("html/back.png")
-
-shaped_overlay_icon_raw_data = load_local_image("html/shaped_overlay.png")
 
 
 def load_file(path):
@@ -88,14 +37,14 @@ def get_page_user_info(userData: UserData, charactersDataList):
 def _getWeapon(characterData: CharacterData, idx):
     icon = f"{BASE_URL}{characterData.equipedWeapons[idx].icon}"
     if characterData.equipedWeapons[idx].state & ItemState.Crafted.value:
-        shaped_overlay = "data:image/png;base64," + shaped_overlay_icon_raw_data
+        shaped_overlay = "data:image/png;base64," + local_images.shaped_overlay_icon_raw_data
     else:
         shaped_overlay = ""
     season_overlay = f"{BASE_URL}{characterData.equipedWeapons[idx].seasonOverlayIcon}"
     name = characterData.equipedWeapons[idx].name
     type = characterData.equipedWeapons[idx].tierAndType
-    ammo_type = "data:image/png;base64," + ammo_type_icons_raw_data[AmmoType(characterData.equipedWeapons[idx].ammoType)]
-    damage_type = "data:image/png;base64," + damage_type_icons_raw_data[DamageType(characterData.equipedWeapons[idx].damageType)]
+    ammo_type = "data:image/png;base64," + local_images.ammo_type_icons_raw_data[AmmoType(characterData.equipedWeapons[idx].ammoType)]
+    damage_type = "data:image/png;base64," + local_images.damage_type_icons_raw_data[DamageType(characterData.equipedWeapons[idx].damageType)]
     if characterData.equipedWeapons[idx].state & ItemState.Masterwork.value:
         border_style = "item_masterworked"
     else:
@@ -122,8 +71,8 @@ def get_page_character(characterData: CharacterData):
         content = file.read()
         # General:
         character_idx = f"{characterData.idx}"
-        refresh_button_image = "data:image/png;base64," + refresh_button_icon_raw_data
-        back_button_image = "data:image/png;base64," + back_button_icon_raw_data
+        refresh_button_image = "data:image/png;base64," + local_images.refresh_button_icon_raw_data
+        back_button_image = "data:image/png;base64," + local_images.back_button_icon_raw_data
         # Title:
         character_details_emblem = f"{BASE_URL}{characterData.emblemLarge}"
         character_details_icon = f"{BASE_URL}{characterData.emblemIconTransparent}"
@@ -131,12 +80,12 @@ def get_page_character(characterData: CharacterData):
         # Stats:
         character_subclass_icon = f"{BASE_URL}{characterData.subclassIcon}"
         character_stat_power = characterData.stats[CharacterStats.Power]
-        stat_health_icon = "data:image/png;base64," + stat_icons_raw_data[CharacterStats.Health]
-        stat_melee_icon = "data:image/png;base64," + stat_icons_raw_data[CharacterStats.Melee]
-        stat_grenade_icon = "data:image/png;base64," + stat_icons_raw_data[CharacterStats.Grenade]
-        stat_super_icon = "data:image/png;base64," + stat_icons_raw_data[CharacterStats.Super]
-        stat_class_icon = "data:image/png;base64," + stat_icons_raw_data[CharacterStats.Class]
-        stat_weapons_icon = "data:image/png;base64," + stat_icons_raw_data[CharacterStats.Weapons]
+        stat_health_icon  = local_images.stat_icons_b64_white[CharacterStats.Health]
+        stat_melee_icon   = local_images.stat_icons_b64_white[CharacterStats.Melee]
+        stat_grenade_icon = local_images.stat_icons_b64_white[CharacterStats.Grenade]
+        stat_super_icon   = local_images.stat_icons_b64_white[CharacterStats.Super]
+        stat_class_icon   = local_images.stat_icons_b64_white[CharacterStats.Class]
+        stat_weapons_icon = local_images.stat_icons_b64_white[CharacterStats.Weapons]
         character_stat_health = characterData.stats[CharacterStats.Health]
         character_stat_melee = characterData.stats[CharacterStats.Melee]
         character_stat_grenade = characterData.stats[CharacterStats.Grenade]
