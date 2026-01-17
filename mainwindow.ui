@@ -22,7 +22,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_account">
        <attribute name="title">
@@ -297,6 +297,130 @@
              </layout>
             </item>
            </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Finder</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QHBoxLayout" name="layout_finder_stats">
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Armor type</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="cmb_armor_type2">
+            <item>
+             <property name="text">
+              <string>Any</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Helmet</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Gauntlets</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Chest</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Legs</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Class Item</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chb_health">
+            <property name="text">
+             <string>Health</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chb_melee">
+            <property name="text">
+             <string>Melee</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chb_grenade">
+            <property name="text">
+             <string>Grenade</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chb_super">
+            <property name="text">
+             <string>Super</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chb_class">
+            <property name="text">
+             <string>Class</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="chb_weapons">
+            <property name="text">
+             <string>Weapons</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btn_find2">
+            <property name="text">
+             <string>Find</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="layout_finder_results" stretch="1,3">
+          <item>
+           <widget class="QListWidget" name="lst_result2"/>
+          </item>
+          <item>
+           <widget class="QTextBrowser" name="txt_item3"/>
           </item>
          </layout>
         </item>

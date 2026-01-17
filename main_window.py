@@ -16,6 +16,7 @@ from user_data import UserData
 from character_data import CharacterData
 import pages
 from stats import files_for_armor_type, extract_instances, find_duplicates, save_duplicates_to_file
+from item_data import get_armor_html
 import local_images
 
 
@@ -56,6 +57,9 @@ class MyMainWindow(QMainWindow):
         self.btn_clear_all.clicked.connect(self._slot_btn_clear_all)
         self.btn_save_to_file.clicked.connect(self._slot_btn_save_to_file)
         self.btn_dim_query_copy.clicked.connect(self._slot_btn_dim_query_copy)
+
+        self.btn_find2.clicked.connect(self._slot_btn_find2)
+        self.lst_result2.currentTextChanged.connect(self._slot_list2_select)
 
         self.secrets = MySecrets()
         self.oauth = MyOAuth(self.secrets)
@@ -330,7 +334,7 @@ class MyMainWindow(QMainWindow):
                     continue
 
 
-    def _slot_btn_clear_all(self):
+    def _clear_all_duplicates_tab(self):
         self.lst_result.clear()
         self.inv_instances.clear()
         self.inv_duplicates.clear()
@@ -341,6 +345,16 @@ class MyMainWindow(QMainWindow):
         self.btn_lock_item2.setText("???")
         self.txt_item1.clear()
         self.txt_item2.clear()
+
+
+    def _clear_all_finder_tab(self):
+        self.lst_result2.clear()
+        self.inv_instances.clear()
+        self.txt_item3.clear()
+
+
+    def _slot_btn_clear_all(self):
+        self._clear_all_duplicates_tab()
 
 
     def _slot_find_btn(self):
@@ -358,7 +372,8 @@ class MyMainWindow(QMainWindow):
             case ItemSubType.ArmorClassItem: download_filter = constants.class_items; download_name = "class_items"
             case _: raise Exception("Unexpected armor type!")
         # clear current data
-        self._slot_btn_clear_all()
+        self._clear_all_duplicates_tab()
+        self._clear_all_finder_tab()
         # download instances
         self._get_instanced_items_info(download_filter, download_name)
         # process downloaded instances
@@ -424,45 +439,11 @@ class MyMainWindow(QMainWindow):
         # 1
         self.selected_idx1 = i
         self._toggle_lock_btn_text(self.btn_lock_item1, self.inv_instances[i])
-        self.txt_item1.append(f"""
-<html>
-<h1>{self.inv_instances[i].name}</h1>
-({self.inv_instances[i].instanceId})
-<h2>{self.inv_instances[i].power}</h2>
-<h3>{self.inv_instances[i].archetype}</h3>
-<h3>Tier: {'*' * self.inv_instances[i].tier} ({self.inv_instances[i].tier})</h3>
-<table width="100%" border="1">
-<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Health]}"  width="16" height="16"/></td><td width="5%">{self.inv_instances[i].stat_health }</td><td style="color: {hc1};">{'█' * self.inv_instances[i].stat_health }</td></tr>
-<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Melee]}"   width="16" height="16"/></td><td width="5%">{self.inv_instances[i].stat_melee  }</td><td style="color: {mc1};">{'█' * self.inv_instances[i].stat_melee  }</td></tr>
-<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Grenade]}" width="16" height="16"/></td><td width="5%">{self.inv_instances[i].stat_grenade}</td><td style="color: {gc1};">{'█' * self.inv_instances[i].stat_grenade}</td></tr>
-<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Super]}"   width="16" height="16"/></td><td width="5%">{self.inv_instances[i].stat_super  }</td><td style="color: {sc1};">{'█' * self.inv_instances[i].stat_super  }</td></tr>
-<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Class]}"   width="16" height="16"/></td><td width="5%">{self.inv_instances[i].stat_class  }</td><td style="color: {cc1};">{'█' * self.inv_instances[i].stat_class  }</td></tr>
-<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Weapons]}" width="16" height="16"/></td><td width="5%">{self.inv_instances[i].stat_weapons}</td><td style="color: {wc1};">{'█' * self.inv_instances[i].stat_weapons}&nbsp;</td></tr>
-</table>
-<h3>Total {self.inv_instances[i].total()}</h3>
-</html>
-""")
+        self.txt_item1.append(get_armor_html(self.inv_instances[i], hc1, mc1, gc1, sc1, cc1, wc1))
         # 2
         self.selected_idx2 = j
         self._toggle_lock_btn_text(self.btn_lock_item2, self.inv_instances[j])
-        self.txt_item2.append(f"""
-<html>
-<h1>{self.inv_instances[j].name}</h1>
-({self.inv_instances[j].instanceId})
-<h2>{self.inv_instances[j].power}</h2>
-<h3>{self.inv_instances[j].archetype}</h3>
-<h3>Tier: {'*' * self.inv_instances[j].tier} ({self.inv_instances[j].tier})</h3>
-<table width="100%" border="1">
-<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Health]}"  width="16" height="16"/></td><td width="5%">{self.inv_instances[j].stat_health }</td><td style="color: {hc2};">{'█' * self.inv_instances[j].stat_health }</td></tr>
-<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Melee]}"   width="16" height="16"/></td><td width="5%">{self.inv_instances[j].stat_melee  }</td><td style="color: {mc2};">{'█' * self.inv_instances[j].stat_melee  }</td></tr>
-<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Grenade]}" width="16" height="16"/></td><td width="5%">{self.inv_instances[j].stat_grenade}</td><td style="color: {gc2};">{'█' * self.inv_instances[j].stat_grenade}</td></tr>
-<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Super]}"   width="16" height="16"/></td><td width="5%">{self.inv_instances[j].stat_super  }</td><td style="color: {sc2};">{'█' * self.inv_instances[j].stat_super  }</td></tr>
-<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Class]}"   width="16" height="16"/></td><td width="5%">{self.inv_instances[j].stat_class  }</td><td style="color: {cc2};">{'█' * self.inv_instances[j].stat_class  }</td></tr>
-<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Weapons]}" width="16" height="16"/></td><td width="5%">{self.inv_instances[j].stat_weapons}</td><td style="color: {wc2};">{'█' * self.inv_instances[j].stat_weapons}&nbsp;</td></tr>
-</table>
-<h3>Total {self.inv_instances[j].total()}</h3>
-</html>
-""")
+        self.txt_item2.append(get_armor_html(self.inv_instances[j], hc2, mc2, gc2, sc2, cc2, wc2))
 
 
     def _get_inventory(self):
@@ -543,6 +524,62 @@ class MyMainWindow(QMainWindow):
     def _slot_btn_dim_query_copy(self):
         # copy DIM query to clipboard
         pyperclip.copy(self.txt_dim_query.text())
+
+
+    def _slot_btn_find2(self):
+        # clear current data
+        self._clear_all_duplicates_tab()
+        self._clear_all_finder_tab()
+        # get picked armor type
+        aidx = self.cmb_armor_type2.currentIndex()
+        if aidx == 0:
+            # get files from all subfolders
+            dir, files = files_for_armor_type(ItemSubType.ArmorHelmet)
+            if len(files) > 0:
+                self.inv_instances += extract_instances(dir, files)
+            dir, files = files_for_armor_type(ItemSubType.ArmorGauntlets)
+            if len(files) > 0:
+                self.inv_instances += extract_instances(dir, files)
+            dir, files = files_for_armor_type(ItemSubType.ArmorChest)
+            if len(files) > 0:
+                self.inv_instances += extract_instances(dir, files)
+            dir, files = files_for_armor_type(ItemSubType.ArmorLegs)
+            if len(files) > 0:
+                self.inv_instances += extract_instances(dir, files)
+            dir, files = files_for_armor_type(ItemSubType.ArmorClassItem)
+            if len(files) > 0:
+                self.inv_instances += extract_instances(dir, files)
+            if len(files) == 0:
+                print("No instanced items found!")
+                return
+        else:
+            # get files from selected subfolder only
+            at = ItemSubType(aidx - 1 + ItemSubType.ArmorHelmet.value)
+            dir, files = files_for_armor_type(at)
+            if len(files) == 0:
+                print("No instanced items found!")
+                return
+            self.inv_instances = extract_instances(dir, files)
+        # create pattern
+        ptrn = []
+        ptrn.append('1' if self.chb_health.isChecked()  else '0')
+        ptrn.append('1' if self.chb_melee.isChecked()   else '0')
+        ptrn.append('1' if self.chb_grenade.isChecked() else '0')
+        ptrn.append('1' if self.chb_super.isChecked()   else '0')
+        ptrn.append('1' if self.chb_class.isChecked()   else '0')
+        ptrn.append('1' if self.chb_weapons.isChecked() else '0')
+        pattern = "".join(ptrn)
+        # finds instances matching pattern
+        for item in self.inv_instances:
+            if item.pattern == pattern:
+                self.lst_result2.addItem(f"id:{item.instanceId}")
+
+
+    def _slot_list2_select(self, text):
+        for item in self.inv_instances:
+            if item.instanceId == text.split(":")[1]:
+                self.txt_item3.clear()
+                self.txt_item3.append(get_armor_html(item, "black", "black", "black", "black", "black", "black"))
 
 
 ################################################################################

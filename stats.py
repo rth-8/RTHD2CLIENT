@@ -8,6 +8,9 @@ from item_data import ArmorData
 import constants
 
 
+STAT_THRESHOLD = 6
+
+
 def map_archetype(stat: CharacterStats):
     match stat:
         case CharacterStats.Health: return "Bulwark"
@@ -99,15 +102,15 @@ def extract_instances(dir, files):
             item.archetype = map_archetype(max_stat)
             # create pattern
             ptrn = []
-            ptrn.append('1' if item.stat_health >  10 else '0')
-            ptrn.append('1' if item.stat_melee >   10 else '0')
-            ptrn.append('1' if item.stat_grenade > 10 else '0')
-            ptrn.append('1' if item.stat_super >   10 else '0')
-            ptrn.append('1' if item.stat_class >   10 else '0')
-            ptrn.append('1' if item.stat_weapons > 10 else '0')
+            ptrn.append('1' if item.stat_health >  STAT_THRESHOLD else '0')
+            ptrn.append('1' if item.stat_melee >   STAT_THRESHOLD else '0')
+            ptrn.append('1' if item.stat_grenade > STAT_THRESHOLD else '0')
+            ptrn.append('1' if item.stat_super >   STAT_THRESHOLD else '0')
+            ptrn.append('1' if item.stat_class >   STAT_THRESHOLD else '0')
+            ptrn.append('1' if item.stat_weapons > STAT_THRESHOLD else '0')
             item.pattern = "".join(ptrn)
             # finalize
-            print_item(item, max, max_stat)
+            # print_item(item, max, max_stat)
             instances.append(item)
     return instances
 

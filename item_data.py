@@ -1,4 +1,5 @@
-from bungie_api import ItemSubType, DamageType, AmmoType
+from bungie_api import ItemSubType, DamageType, AmmoType, CharacterStats
+import local_images
 
 ################################################################################
 class ItemData:
@@ -58,3 +59,27 @@ class ArmorData(ItemData):
               + f"{self.pattern:10}"
             #   + f"{self.name}"
               )
+
+
+################################################################################
+
+def get_armor_html(item, hc, mc, gc, sc, cc, wc):
+    return (
+f"""
+<html>
+<h1>{item.name}</h1>
+({item.instanceId})
+<h2>{item.power}</h2>
+<h3>{item.archetype}</h3>
+<h3>Tier: {'*' * item.tier} ({item.tier})</h3>
+<table width="100%" border="1">
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Health]}"  width="16" height="16"/></td><td width="5%">{item.stat_health }</td><td style="color: {hc};">{'█' * item.stat_health }</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Melee]}"   width="16" height="16"/></td><td width="5%">{item.stat_melee  }</td><td style="color: {mc};">{'█' * item.stat_melee  }</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Grenade]}" width="16" height="16"/></td><td width="5%">{item.stat_grenade}</td><td style="color: {gc};">{'█' * item.stat_grenade}</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Super]}"   width="16" height="16"/></td><td width="5%">{item.stat_super  }</td><td style="color: {sc};">{'█' * item.stat_super  }</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Class]}"   width="16" height="16"/></td><td width="5%">{item.stat_class  }</td><td style="color: {cc};">{'█' * item.stat_class  }</td></tr>
+<tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Weapons]}" width="16" height="16"/></td><td width="5%">{item.stat_weapons}</td><td style="color: {wc};">{'█' * item.stat_weapons}&nbsp;</td></tr>
+</table>
+<h3>Total {item.total()}</h3>
+</html>
+""")
