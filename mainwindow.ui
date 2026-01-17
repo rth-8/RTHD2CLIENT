@@ -450,6 +450,7 @@
      <string>Inventory</string>
     </property>
     <addaction name="actionInventoryRefresh"/>
+    <addaction name="actionGet_general_info"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuInventory"/>
@@ -462,10 +463,15 @@
   </action>
   <action name="actionInventoryRefresh">
    <property name="text">
-    <string>Refresh</string>
+    <string>Refresh Inventory</string>
    </property>
    <property name="toolTip">
     <string>Refresh Inventory</string>
+   </property>
+  </action>
+  <action name="actionGet_general_info">
+   <property name="text">
+    <string>Get general info</string>
    </property>
   </action>
  </widget>

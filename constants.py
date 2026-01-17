@@ -1,5 +1,6 @@
 helmets = {
     1575046822 : "Smoke Jumper Helm",
+    1883377784 : "Swordmaster's Helm",
     2278464039 : "Wild Anthem Helm",
     2629942414 : "Last Discipline Helm",
     3031404418 : "Ferropotent Head",
@@ -27,6 +28,7 @@ chests = {
     1644825026 : "Wild Anthem Plate",
     2199272806 : "Bushido Plate",
     2401760398 : "Techsec Plate",
+    262826703  : "Swordmaster's Plate",
     3347493825 : "Smoke Jumper Plate",
     3428369046 : "Disaster Corps Plate",
     3554497829 : "Ferropotent Plate",
@@ -36,6 +38,7 @@ chests = {
 legs = {
     1649469535 : "Iron Panoply Greaves",
     2397541401 : "Smoke Jumper Boots",
+    2639123099 : "Swordmaster's Greaves",
     2662868359 : "Lustrous Greaves",
     2732598696 : "Wild Anthem Greaves",
     3000956609 : "Last Discipline Greaves",
@@ -49,6 +52,7 @@ class_items = {
     1167444103 : "Biosphere Explorer Mark",
     1334855187 : "Wild Anthem Mark",
     1343302889 : "Dreambane Mark",
+    1934339678 : "Swordmaster's Mark",
     2517367247 : "Bushido Mark",
     2676446840 : "Ferropotent Mark",
     2719854935 : "Techsec Mark",

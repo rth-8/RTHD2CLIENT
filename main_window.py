@@ -40,6 +40,7 @@ class MyMainWindow(QMainWindow):
 
         self.actionExit.triggered.connect(self.close)
         self.actionInventoryRefresh.triggered.connect(self._refresh_inventory)
+        self.actionGet_general_info.triggered.connect(self._get_general_info_about_vault_items)
 
         self.webview = QWebEngineView()
         self.webview.urlChanged.connect(self._url_changed)
@@ -167,6 +168,19 @@ class MyMainWindow(QMainWindow):
         with open(cache_file, "r") as file:
             json_data = json.load(file)
         return json_data
+
+
+    def _get_inventory(self):
+        print("Get user profile inventory...")
+        url = USER_PROFILE_INV.format(API_ROOT, self.userData.membershipType, self.userData.membershipId)
+        self._download_and_save(url, CACHE_USER_PROFILE_INV)
+
+
+    def _refresh_inventory(self):
+        if os.path.exists(CACHE_USER_PROFILE_INV):
+            print(f"Delete inventory...")
+            os.remove(CACHE_USER_PROFILE_INV)
+        self._get_inventory()
 
 
     def _get_general_info_about_vault_items(self):
@@ -444,19 +458,6 @@ class MyMainWindow(QMainWindow):
         self.selected_idx2 = j
         self._toggle_lock_btn_text(self.btn_lock_item2, self.inv_instances[j])
         self.txt_item2.append(get_armor_html(self.inv_instances[j], hc2, mc2, gc2, sc2, cc2, wc2))
-
-
-    def _get_inventory(self):
-        print("Get user profile inventory...")
-        url = USER_PROFILE_INV.format(API_ROOT, self.userData.membershipType, self.userData.membershipId)
-        self._download_and_save(url, CACHE_USER_PROFILE_INV)
-
-
-    def _refresh_inventory(self):
-        if os.path.exists(CACHE_USER_PROFILE_INV):
-            print(f"Delete inventory...")
-            os.remove(CACHE_USER_PROFILE_INV)
-        self._get_inventory()
 
 
     def _toggle_instance_lock_state(self, idx, btn):
