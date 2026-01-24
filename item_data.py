@@ -1,4 +1,4 @@
-from bungie_api import ItemSubType, DamageType, AmmoType, CharacterStats
+from bungie_api import ItemSubType, DamageType, AmmoType, CharacterClass, CharacterStats
 import local_images
 
 ################################################################################
@@ -27,6 +27,7 @@ class WeaponData(ItemData):
 class ArmorData(ItemData):
     def __init__(self) -> None:
         super().__init__()
+        self.class_type = CharacterClass.Unknown
         self.subtype = ItemSubType.NoType
         self.archetype = ""
         self.stat_health  = 0
@@ -64,10 +65,17 @@ class ArmorData(ItemData):
 ################################################################################
 
 def get_armor_html(item, hc, mc, gc, sc, cc, wc):
+    class_img = ""
+    match item.class_type:
+        case CharacterClass.Titan:  class_img = local_images.class_titan_icon_raw_data
+        case CharacterClass.Hunter: class_img = local_images.class_hunter_icon_raw_data
+        case CharacterClass.Warlock:class_img = local_images.class_warlock_icon_raw_data
     return (
 f"""
 <html>
-<h1>{item.name}</h1>
+<table width="100%" border="0">
+<tr><td><h1>{item.name}</h1></td><td style="text-align: right"><img src="data:image/png;base64,{class_img}" width="64" height="64"/?</td></tr>
+</table>
 ({item.instanceId})
 <h2>{item.power}</h2>
 <h3>{item.archetype}</h3>

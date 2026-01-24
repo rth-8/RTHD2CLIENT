@@ -3,7 +3,7 @@
 
 import os
 import json
-from bungie_api import CharacterStats, ItemSubType
+from bungie_api import CharacterClass, CharacterStats, ItemSubType
 from item_data import ArmorData
 import constants
 
@@ -24,25 +24,36 @@ def map_archetype(stat: CharacterStats):
 
 def map_armor_piece(hash):
     stype = ItemSubType.NoType
+    ctype = CharacterClass.Unknown
     name = "???"
-    if hash in constants.helmets_legendary:
+    if hash in constants.helmets_legendary.keys():
+        # It's a helmet
         stype = ItemSubType.ArmorHelmet
-        name = constants.helmets_legendary.get(hash)
-    elif hash in constants.gauntlets_legendary:
+        ctype = CharacterClass(constants.helmets_legendary.get(hash)[0])
+        name = constants.helmets_legendary.get(hash)[1]
+    elif hash in constants.gauntlets_legendary.keys():
+        # It's gauntlets
         stype = ItemSubType.ArmorGauntlets
-        name = constants.gauntlets_legendary.get(hash)
-    elif hash in constants.chests_legendary:
+        ctype = CharacterClass(constants.gauntlets_legendary.get(hash)[0])
+        name = constants.gauntlets_legendary.get(hash)[1]
+    elif hash in constants.chests_legendary.keys():
+        # It's a chest
         stype = ItemSubType.ArmorChest
-        name = constants.chests_legendary.get(hash)
-    elif hash in constants.legs_legendary:
+        ctype = CharacterClass(constants.chests_legendary.get(hash)[0])
+        name = constants.chests_legendary.get(hash)[1]
+    elif hash in constants.legs_legendary.keys():
+        # It's legs
         stype = ItemSubType.ArmorLegs
-        name = constants.legs_legendary.get(hash)
-    elif hash in constants.class_items_legendary:
+        ctype = CharacterClass(constants.legs_legendary.get(hash)[0])
+        name = constants.legs_legendary.get(hash)[1]
+    elif hash in constants.class_items_legendary.keys():
+        # It's a class item
         stype = ItemSubType.ArmorClassItem
-        name = constants.class_items_legendary.get(hash)
+        ctype = CharacterClass(constants.class_items_legendary.get(hash)[0])
+        name = constants.class_items_legendary.get(hash)[1]
     # else:
     #     raise Exception("Unexpected armor type!")
-    return stype, name
+    return stype, ctype, name
 
 
 def get_stat(data, stat: CharacterStats, max, max_stat: CharacterStats):
@@ -85,7 +96,7 @@ def extract_instances(dir, files):
             # make armor item
             item = ArmorData()
             item.hash = data["Response"]["item"]["data"]["itemHash"]
-            item.subtype, item.name = map_armor_piece(item.hash)
+            item.subtype, item.class_type, item.name = map_armor_piece(item.hash)
             item.instanceId = data["Response"]["item"]["data"]["itemInstanceId"]
             item.power = data["Response"]["instance"]["data"]["primaryStat"]["value"]
             item.tier = tier

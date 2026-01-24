@@ -204,6 +204,7 @@ class MyMainWindow(QMainWindow):
 
     def _get_instanced_items_info(self, filter, type_name):
         print(f"Downloading instances for '{type_name}'")
+        # print(f"FILTER: {filter}")
         # first try to create subfolder
         folder = f"cache/{type_name}"
         dirtocreate = os.getcwd() + "/" + folder
@@ -379,11 +380,11 @@ class MyMainWindow(QMainWindow):
         download_filter = None
         download_name = None
         match at:
-            case ItemSubType.ArmorHelmet:    download_filter = constants.helmets_legendary    ; download_name = "helmets"
-            case ItemSubType.ArmorGauntlets: download_filter = constants.gauntlets_legendary  ; download_name = "gauntlets"
-            case ItemSubType.ArmorChest:     download_filter = constants.chests_legendary     ; download_name = "chests"
-            case ItemSubType.ArmorLegs:      download_filter = constants.legs_legendary       ; download_name = "legs"
-            case ItemSubType.ArmorClassItem: download_filter = constants.class_items_legendary; download_name = "class_items"
+            case ItemSubType.ArmorHelmet:    download_filter = constants.helmets_legendary.keys()    ; download_name = "helmets"
+            case ItemSubType.ArmorGauntlets: download_filter = constants.gauntlets_legendary.keys()  ; download_name = "gauntlets"
+            case ItemSubType.ArmorChest:     download_filter = constants.chests_legendary.keys()     ; download_name = "chests"
+            case ItemSubType.ArmorLegs:      download_filter = constants.legs_legendary.keys()       ; download_name = "legs"
+            case ItemSubType.ArmorClassItem: download_filter = constants.class_items_legendary.keys(); download_name = "class_items"
             case _: raise Exception("Unexpected armor type!")
         # clear current data
         self._clear_all_duplicates_tab()

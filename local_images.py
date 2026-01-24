@@ -43,6 +43,9 @@ def load_local_image(path: str) -> str:
         return data
 
 def load_local_images():
+    global class_titan_icon_raw_data
+    global class_hunter_icon_raw_data
+    global class_warlock_icon_raw_data
     global stat_icons_b64_white
     global stat_icons_b64_black
     global ammo_type_icons_raw_data
@@ -50,6 +53,10 @@ def load_local_images():
     global refresh_button_icon_raw_data
     global back_button_icon_raw_data
     global shaped_overlay_icon_raw_data
+    # Classes
+    class_titan_icon_raw_data = load_local_image("html/class_titan.png")
+    class_hunter_icon_raw_data = load_local_image("html/class_hunter.png")
+    class_warlock_icon_raw_data = load_local_image("html/class_warlock.png")
     # Stats
     for key in stat_icons.keys():
         raw = load_local_image(stat_icons[key])
@@ -68,6 +75,10 @@ def load_local_images():
     shaped_overlay_icon_raw_data = load_local_image("html/shaped_overlay.png")
 
 # Images:
+
+class_titan_icon_raw_data = None
+class_hunter_icon_raw_data = None
+class_warlock_icon_raw_data = None
 
 stat_icons_b64_white = {}
 stat_icons_b64_black = {}

@@ -7,14 +7,16 @@ TYPE = 0
 STYP = 1
 TIER = 2
 NAME = 3
+CLSS = 4
 
 
 def print_table(items):
-    print(f"{"Item Hash":15}{"Type":15}{"Subtype":15}{"Tier":15}{"Name"}")
-    print("-----------------------------------------------------------------------------------")
+    print(f"{"Item Hash":15}{"Type":15}{"Subtype":15}{"Tier":15}{"Class":15}{"Name"}")
+    print("-----------------------------------------------------------------------------------------------")
     for h, v in items.items():
         type_name = ""
         subtype_name = ""
+        class_name = ""
         match v[TYPE]:
             case 2: type_name = "Armor"
             case 3: type_name = "Weapon"
@@ -29,20 +31,23 @@ def print_table(items):
                 case _: subtype_name = "???"
         else:
             subtype_name = "---"
-        print(f"{str(h):15}{type_name:15}{subtype_name:15}{v[TIER]:15}{v[NAME]}")
-    print("-----------------------------------------------------------------------------------")
+        match v[CLSS]:
+            case 0: class_name = "Titan"
+            case 1: class_name = "Hunter"
+            case 2: class_name = "Warlock"
+            case _: class_name = "???"
+        print(f"{str(h):15}{type_name:15}{subtype_name:15}{v[TIER]:15}{class_name:15}{v[NAME]}")
+    print("-----------------------------------------------------------------------------------------------")
 
 
 def print_list(lst):
     print("~~~~~~~~~~~~~~~~~~~~")
     for elem in lst:
-        print(f"{elem[0]},    # {elem[1]}")
+        print(f"{elem[0]}, {elem[1]}, {elem[2]}")
 
 
 def get_armor_subtype(items, subtype, tier="Legendary"):
-    lst = [(h, v[NAME]) for (h, v) in items.items() if v[TYPE] == 2 and v[STYP] == subtype and v[TIER] == tier]
-    # print(lst)
-    # print(len(lst))
+    lst = [(h, v[CLSS], v[NAME]) for (h, v) in items.items() if v[TYPE] == 2 and v[STYP] == subtype and v[TIER] == tier]
     print_list(lst)
     return lst
 
@@ -50,7 +55,7 @@ def get_armor_subtype(items, subtype, tier="Legendary"):
 def generate_dict(file, lst, subtype_name, tier="Legendary"):
     file.write(f"{subtype_name}_{tier} = {{\n")
     for elem in lst:
-        file.write(f"{elem[0]:15} : \"{elem[1]}\",\n")
+        file.write(f"{elem[0]:15} : ({elem[1]}, \"{elem[2]}\"),\n")
     file.write("}\n\n")
 
 
@@ -110,17 +115,13 @@ if __name__ == '__main__':
         with open(path_name, 'r') as file:
             data = json.load(file)
             hash = data["Response"]["hash"]
-            type = int(data["Response"]["itemType"])
-            subtype = int(data["Response"]["itemSubType"])
-            tier = data["Response"]["inventory"]["tierTypeName"]
             items[hash] = (
-                type,
-                subtype,
-                tier,
+                int(data["Response"]["itemType"]),
+                int(data["Response"]["itemSubType"]),
+                data["Response"]["inventory"]["tierTypeName"],
                 data["Response"]["displayProperties"]["name"],
+                data["Response"]["classType"],
             )
 
-
     print_table(items)
-
     generate_constants(items)
