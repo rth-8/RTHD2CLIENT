@@ -379,11 +379,11 @@ class MyMainWindow(QMainWindow):
         download_filter = None
         download_name = None
         match at:
-            case ItemSubType.ArmorHelmet:    download_filter = constants.helmets    ; download_name = "helmets"
-            case ItemSubType.ArmorGauntlets: download_filter = constants.gauntlets  ; download_name = "gauntlets"
-            case ItemSubType.ArmorChest:     download_filter = constants.chests     ; download_name = "chests"
-            case ItemSubType.ArmorLegs:      download_filter = constants.legs       ; download_name = "legs"
-            case ItemSubType.ArmorClassItem: download_filter = constants.class_items; download_name = "class_items"
+            case ItemSubType.ArmorHelmet:    download_filter = constants.helmets_legendary    ; download_name = "helmets"
+            case ItemSubType.ArmorGauntlets: download_filter = constants.gauntlets_legendary  ; download_name = "gauntlets"
+            case ItemSubType.ArmorChest:     download_filter = constants.chests_legendary     ; download_name = "chests"
+            case ItemSubType.ArmorLegs:      download_filter = constants.legs_legendary       ; download_name = "legs"
+            case ItemSubType.ArmorClassItem: download_filter = constants.class_items_legendary; download_name = "class_items"
             case _: raise Exception("Unexpected armor type!")
         # clear current data
         self._clear_all_duplicates_tab()

@@ -25,21 +25,21 @@ def map_archetype(stat: CharacterStats):
 def map_armor_piece(hash):
     stype = ItemSubType.NoType
     name = "???"
-    if hash in constants.helmets:
+    if hash in constants.helmets_legendary:
         stype = ItemSubType.ArmorHelmet
-        name = constants.helmets.get(hash)
-    elif hash in constants.gauntlets:
+        name = constants.helmets_legendary.get(hash)
+    elif hash in constants.gauntlets_legendary:
         stype = ItemSubType.ArmorGauntlets
-        name = constants.gauntlets.get(hash)
-    elif hash in constants.chests:
+        name = constants.gauntlets_legendary.get(hash)
+    elif hash in constants.chests_legendary:
         stype = ItemSubType.ArmorChest
-        name = constants.chests.get(hash)
-    elif hash in constants.legs:
+        name = constants.chests_legendary.get(hash)
+    elif hash in constants.legs_legendary:
         stype = ItemSubType.ArmorLegs
-        name = constants.legs.get(hash)
-    elif hash in constants.class_items:
+        name = constants.legs_legendary.get(hash)
+    elif hash in constants.class_items_legendary:
         stype = ItemSubType.ArmorClassItem
-        name = constants.class_items.get(hash)
+        name = constants.class_items_legendary.get(hash)
     # else:
     #     raise Exception("Unexpected armor type!")
     return stype, name

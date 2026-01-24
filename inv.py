@@ -10,6 +10,8 @@ NAME = 3
 
 
 def print_table(items):
+    print(f"{"Item Hash":15}{"Type":15}{"Subtype":15}{"Tier":15}{"Name"}")
+    print("-----------------------------------------------------------------------------------")
     for h, v in items.items():
         type_name = ""
         subtype_name = ""
@@ -28,6 +30,7 @@ def print_table(items):
         else:
             subtype_name = "---"
         print(f"{str(h):15}{type_name:15}{subtype_name:15}{v[TIER]:15}{v[NAME]}")
+    print("-----------------------------------------------------------------------------------")
 
 
 def print_list(lst):
@@ -36,12 +39,60 @@ def print_list(lst):
         print(f"{elem[0]},    # {elem[1]}")
 
 
-def get_legendary_armor_subtype(items, subtype):
-    lst = [(h, v[NAME]) for (h, v) in items.items() if v[TYPE] == 2 and v[STYP] == subtype and v[TIER] == "Legendary"]
+def get_armor_subtype(items, subtype, tier="Legendary"):
+    lst = [(h, v[NAME]) for (h, v) in items.items() if v[TYPE] == 2 and v[STYP] == subtype and v[TIER] == tier]
     # print(lst)
     # print(len(lst))
     print_list(lst)
     return lst
+
+
+def generate_dict(file, lst, subtype_name, tier="Legendary"):
+    file.write(f"{subtype_name}_{tier} = {{\n")
+    for elem in lst:
+        file.write(f"{elem[0]:15} : \"{elem[1]}\",\n")
+    file.write("}\n\n")
+
+
+def generate_constants(items):
+    with open("constants.py", 'w') as file:
+        print("\nLegendary Armor Pieces:")
+        print("----- HELMETS -----")
+        helmets = get_armor_subtype(items, 26, "Legendary")
+        print("----- GAUNTLETS -----")
+        gauntlets = get_armor_subtype(items, 27, "Legendary")
+        print("----- CHESTS -----")
+        chests = get_armor_subtype(items, 28, "Legendary")
+        print("----- LEGS -----")
+        legs = get_armor_subtype(items, 29, "Legendary")
+        print("----- CLASS ITEMS -----")
+        class_items = get_armor_subtype(items, 30, "Legendary")
+
+        # Generate constants
+        generate_dict(file, helmets, "helmets", "legendary")
+        generate_dict(file, gauntlets, "gauntlets", "legendary")
+        generate_dict(file, chests, "chests", "legendary")
+        generate_dict(file, legs, "legs", "legendary")
+        generate_dict(file, class_items, "class_items", "legendary")
+
+        print("\nExotic Armor Pieces:")
+        print("----- HELMETS -----")
+        helmets = get_armor_subtype(items, 26, "Exotic")
+        print("----- GAUNTLETS -----")
+        gauntlets = get_armor_subtype(items, 27, "Exotic")
+        print("----- CHESTS -----")
+        chests = get_armor_subtype(items, 28, "Exotic")
+        print("----- LEGS -----")
+        legs = get_armor_subtype(items, 29, "Exotic")
+        print("----- CLASS ITEMS -----")
+        class_items = get_armor_subtype(items, 30, "Exotic")
+
+        # Generate constants
+        generate_dict(file, helmets, "helmets", "exotic")
+        generate_dict(file, gauntlets, "gauntlets", "exotic")
+        generate_dict(file, chests, "chests", "exotic")
+        generate_dict(file, legs, "legs", "exotic")
+        generate_dict(file, class_items, "class_items", "exotic")
 
 
 #################################################################################################################################
@@ -72,14 +123,4 @@ if __name__ == '__main__':
 
     print_table(items)
 
-
-    helmets = get_legendary_armor_subtype(items, 26)
-
-    gauntlets = get_legendary_armor_subtype(items, 27)
-
-    chests = get_legendary_armor_subtype(items, 28)
-
-    legs = get_legendary_armor_subtype(items, 29)
-
-    class_items = get_legendary_armor_subtype(items, 30)
-
+    generate_constants(items)
