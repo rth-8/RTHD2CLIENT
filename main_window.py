@@ -181,6 +181,7 @@ class MyMainWindow(QMainWindow):
             print(f"Delete inventory...")
             os.remove(CACHE_USER_PROFILE_INV)
         self._get_inventory()
+        print("Done.")
 
 
     def _get_general_info_about_vault_items(self):
@@ -200,6 +201,7 @@ class MyMainWindow(QMainWindow):
                 # queries to endpoint, because _download_and_save checks, if data were already downloaded 
                 # (i.e. corresponding file is in cache).
                 self._download_and_save(url, f"cache/user_profile_inv_{itemHash}.json")
+        print("Done.")
 
 
     def _get_instanced_items_info(self, filter, type_name):
@@ -375,7 +377,7 @@ class MyMainWindow(QMainWindow):
     def _slot_find_btn(self):
         # get picked armor type
         at = ItemSubType(self.cmb_armor_type.currentIndex() + ItemSubType.ArmorHelmet.value)
-        print(f"FIND: {at}")
+        print(f"FIND: duplicates: {at}")
         # check armor type and prepare downloading info
         download_filter = None
         download_name = None
@@ -409,6 +411,7 @@ class MyMainWindow(QMainWindow):
         self.statusbar.showMessage(f"Found {len(self.inv_duplicates)} duplicates")
         for dupe in self.inv_duplicates:
             self.lst_result.addItem(f"id:{self.inv_instances[dupe[0]].instanceId} or id:{self.inv_instances[dupe[1]].instanceId}")
+        print("Done.")
 
 
     def _toggle_lock_btn_text(self, btn, item):
@@ -507,13 +510,17 @@ class MyMainWindow(QMainWindow):
 
 
     def _slot_btn_lock_item1(self):
+        print("Toggle lock state for item 1...")
         if self.selected_idx1 > -1:
             self._toggle_instance_lock_state(self.selected_idx1, self.btn_lock_item1)
+        print("Done.")
 
 
     def _slot_btn_lock_item2(self):
+        print("Toggle lock state for item 2...")
         if self.selected_idx2 > -1:
             self._toggle_instance_lock_state(self.selected_idx2, self.btn_lock_item2)
+        print("Done.")
 
 
     def _slot_btn_save_to_file(self):
@@ -534,6 +541,7 @@ class MyMainWindow(QMainWindow):
         self._clear_all_finder_tab()
         # get picked armor type
         aidx = self.cmb_armor_type2.currentIndex()
+        print(f"FIND: pattern: {aidx}")
         if aidx == 0:
             # get files from all subfolders
             dir, files = files_for_armor_type(ItemSubType.ArmorHelmet)
@@ -575,6 +583,7 @@ class MyMainWindow(QMainWindow):
         for item in self.inv_instances:
             if item.pattern == pattern:
                 self.lst_result2.addItem(f"id:{item.instanceId}")
+        print("Done.")
 
 
     def _slot_list2_select(self, text):
