@@ -82,3 +82,76 @@ instance id :
 state       : 9                         ... 8 + 1 = crafted + locked
 name        : "The Recluse"
 
+
+---
+
+PERKS:
+~~~~~~
+
+- perks are provided in instance data: ["Response"]["perks"]["data"]["perks"] = list of perks
+- perks in list are orderd by in-game left -> right
+- perk: 
+    "perkHash"
+    "isActive"
+
+- general:
+
+1614906885      melee mod (+10)
+4234432032      grenade mod (+10)
+1266565082      super mod (+10)
+2874419691      class mod (+10)
+
+1577360915      balanced tunning (+1 to 3 lowest stats)
+
+- helmet:
+
+3406124625      arc siphon
+3435676644      solar siphon
+2592032908      stasis siphon
+527327057       void siphon
+1894805054      strand siphon
+
+3204936245      special ammo finder
+653045601       heavy ammo finder
+
+- gauntlets:
+
+2101463507      melee font
+
+1418341804      heavy handed
+
+13526844        fastball
+
+- class item:
+
+4082813821      distribution
+
+2602830610      powerful attraction
+
+
+Exotic class item perks:
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Titan
+
+- column 1:
+
+3465434116      Spirit of the Assassin
+3465434117      Spirit of Inmost Light
+3465434118      Spirit of the Ophidian
+2810944065      Spirit of Severance
+2810944064      Spirit of Hoarfrost
+2810944067      Spirit of the Eternal Warrior
+Spirit of the Abeyant
+2810944069      Spirit of the Bear
+
+- column 2:
+
+3465434119      Spirit of the Star-Eater
+3465434112      Spirit of Synthoceps
+Spirit of Verity
+2810944068      Spirit of Contact
+2810944071      Spirit of Scars
+Spirit of the Horn
+2810944073      Spirit of Alpha Lupi
+2810944072      Spirit of the Armamentarium
