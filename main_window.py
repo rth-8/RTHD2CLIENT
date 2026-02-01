@@ -386,7 +386,9 @@ class MyMainWindow(QMainWindow):
             case ItemSubType.ArmorGauntlets: download_filter = constants.gauntlets_legendary.keys()  ; download_name = "gauntlets"
             case ItemSubType.ArmorChest:     download_filter = constants.chests_legendary.keys()     ; download_name = "chests"
             case ItemSubType.ArmorLegs:      download_filter = constants.legs_legendary.keys()       ; download_name = "legs"
-            case ItemSubType.ArmorClassItem: download_filter = constants.class_items_legendary.keys(); download_name = "class_items"
+            case ItemSubType.ArmorClassItem:
+                download_filter = list(constants.class_items_legendary.keys()) + list(constants.class_items_exotic.keys())
+                download_name = "class_items"
             case _: raise Exception("Unexpected armor type!")
         # clear current data
         self._clear_all_duplicates_tab()
