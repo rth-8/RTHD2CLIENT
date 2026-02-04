@@ -174,3 +174,27 @@ class AmmoType(Enum):
     Special=2
     Heavy=3
 
+
+################################################################################
+
+class_items_exotic_perk_column_1 = {
+      3465434116 : (0, "Spirit of the Assassin"),
+      3465434117 : (0, "Spirit of Inmost Light"),
+      3465434118 : (0, "Spirit of the Ophidian"),
+      2810944065 : (0, "Spirit of Severance"),
+      2810944064 : (0, "Spirit of Hoarfrost"),
+      2810944067 : (0, "Spirit of the Eternal Warrior"),
+      2810944066 : (0, "Spirit of the Abeyant"),
+      2810944069 : (0, "Spirit of the Bear"),
+}
+
+class_items_exotic_perk_column_2 = {
+    3465434119 : (0, "Spirit of the Star-Eater"),
+    3465434112 : (0, "Spirit of Synthoceps"),
+    3465434113 : (0, "Spirit of Verity"),
+    2810944068 : (0, "Spirit of Contact"),
+    2810944071 : (0, "Spirit of Scars"),
+    2810944070 : (0, "Spirit of the Horn"),
+    2810944073 : (0, "Spirit of Alpha Lupi"),
+    2810944072 : (0, "Spirit of the Armamentarium"),
+}

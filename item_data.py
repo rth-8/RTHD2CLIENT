@@ -1,5 +1,8 @@
-from bungie_api import ItemSubType, DamageType, AmmoType, CharacterClass, CharacterStats
+from bungie_api import ItemSubType, DamageType, AmmoType, CharacterClass, CharacterStats, \
+    class_items_exotic_perk_column_1, class_items_exotic_perk_column_2
 import local_images
+import constants
+
 
 ################################################################################
 class ItemData:
@@ -37,6 +40,8 @@ class ArmorData(ItemData):
         self.stat_class   = 0
         self.stat_weapons = 0
         self.pattern = "000000"
+        self.exotic_class_item_perk1 = 0
+        self.exotic_class_item_perk2 = 0
 
     def total(self):
         return (self.stat_health +
@@ -64,7 +69,7 @@ class ArmorData(ItemData):
 
 ################################################################################
 
-def get_armor_html(item, hc, mc, gc, sc, cc, wc):
+def get_armor_html(item: ArmorData, hc, mc, gc, sc, cc, wc):
     class_img = ""
     match item.class_type:
         case CharacterClass.Titan:  class_img = local_images.class_titan_icon_raw_data
@@ -74,7 +79,7 @@ def get_armor_html(item, hc, mc, gc, sc, cc, wc):
 f"""
 <html>
 <table width="100%" border="0">
-<tr><td><h1>{item.name}</h1></td><td style="text-align: right"><img src="data:image/png;base64,{class_img}" width="64" height="64"/?</td></tr>
+<tr><td><h1>{item.name}</h1></td><td style="text-align: right"><img src="data:image/png;base64,{class_img}" width="48" height="48"/?</td></tr>
 </table>
 ({item.instanceId})
 <h2>{item.power}</h2>
@@ -89,5 +94,8 @@ f"""
 <tr><td width="5%"><img src="{local_images.stat_icons_b64_black[CharacterStats.Weapons]}" width="16" height="16"/></td><td width="5%">{item.stat_weapons}</td><td style="color: {wc};">{'█' * item.stat_weapons}&nbsp;</td></tr>
 </table>
 <h3>Total {item.total()}</h3>
+</br>
+<p>{class_items_exotic_perk_column_1.get(item.exotic_class_item_perk1, ("", ""))[1]}</p>
+<p>{class_items_exotic_perk_column_2.get(item.exotic_class_item_perk2, ("", ""))[1]}</p>
 </html>
 """)

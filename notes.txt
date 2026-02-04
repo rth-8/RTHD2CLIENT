@@ -142,16 +142,16 @@ Titan
 2810944065      Spirit of Severance
 2810944064      Spirit of Hoarfrost
 2810944067      Spirit of the Eternal Warrior
-Spirit of the Abeyant
+2810944066      Spirit of the Abeyant
 2810944069      Spirit of the Bear
 
 - column 2:
 
 3465434119      Spirit of the Star-Eater
 3465434112      Spirit of Synthoceps
-Spirit of Verity
+3465434113      Spirit of Verity
 2810944068      Spirit of Contact
 2810944071      Spirit of Scars
-Spirit of the Horn
+2810944070      Spirit of the Horn
 2810944073      Spirit of Alpha Lupi
 2810944072      Spirit of the Armamentarium

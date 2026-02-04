@@ -3,7 +3,8 @@
 
 import os
 import json
-from bungie_api import CharacterClass, CharacterStats, ItemSubType
+from bungie_api import CharacterClass, CharacterStats, ItemSubType, \
+    class_items_exotic_perk_column_1, class_items_exotic_perk_column_2
 from item_data import ArmorData
 import constants
 
@@ -51,6 +52,11 @@ def map_armor_piece(hash):
         stype = ItemSubType.ArmorClassItem
         ctype = CharacterClass(constants.class_items_legendary.get(hash)[0])
         name = constants.class_items_legendary.get(hash)[1]
+    elif hash in constants.class_items_exotic.keys():
+        # It's an exotic class item
+        stype = ItemSubType.ArmorClassItem
+        ctype = CharacterClass(constants.class_items_exotic.get(hash)[0])
+        name = constants.class_items_exotic.get(hash)[1]
     # else:
     #     raise Exception("Unexpected armor type!")
     return stype, ctype, name
@@ -101,6 +107,14 @@ def extract_instances(dir, files):
             item.power = data["Response"]["instance"]["data"]["primaryStat"]["value"]
             item.tier = tier
             item.state = data["Response"]["item"]["data"]["state"]
+            if item.hash in constants.class_items_exotic.keys():
+                # extract exotic class item perks
+                perks = data["Response"]["perks"]["data"]["perks"]
+                for perk in perks:
+                    if perk["perkHash"] in class_items_exotic_perk_column_1.keys():
+                        item.exotic_class_item_perk1 = perk["perkHash"]
+                    if perk["perkHash"] in class_items_exotic_perk_column_2.keys():
+                        item.exotic_class_item_perk2 = perk["perkHash"]
             # extract stats and find max
             max = 0
             max_stat = None
@@ -162,11 +176,11 @@ def find_duplicates(instances, use_armor_set=True, use_archetype=True):
                     idx2 = j
             # Found?
             if idx1 and idx2:
-                print("-----------------------------------------")
-                print_item(instances[i], 0, "")
-                print_item(instances[j], 0, "")
+                # print("-----------------------------------------")
+                # print_item(instances[i], 0, "")
+                # print_item(instances[j], 0, "")
                 # print DIM query
-                print(f"id:{instances[i].instanceId} or id:{instances[j].instanceId}")
+                # print(f"id:{instances[i].instanceId} or id:{instances[j].instanceId}")
                 dupes.append((i,j))
     return dupes
 
@@ -178,11 +192,49 @@ def save_duplicates_to_file(instances, duplicates, fileName):
             file.write('\n')
 
 
+def print_eci(item):
+    p1 = class_items_exotic_perk_column_1.get(item.exotic_class_item_perk1, ("", ""))[1]
+    p2 = class_items_exotic_perk_column_2.get(item.exotic_class_item_perk2, ("", ""))[1]
+    print(f"{item.instanceId:15}: {p1:35} {p2:35}")
+
+
+def print_eci_list(items):
+    print("----------------------------------------------------------------------------------")
+    for item in items:
+        print_eci(item)
+
+
+def get_exotic_class_items(instances):
+    eci_list = [item for item in instances if item.hash in constants.class_items_exotic.keys()]
+    print_eci_list(eci_list)
+    size = len(eci_list)
+    print(f"Found {size} exotic class items")
+    return eci_list
+
+
+def find_eci_duplicates(instances):
+    size = len(instances)
+    dupes = []
+    for i in range(0, size-1, 1):
+        for j in range(i, size, 1):
+            if instances[i].instanceId == instances[j].instanceId:
+                # skip comparison of same instances
+                continue
+            if instances[i].exotic_class_item_perk1 == instances[j].exotic_class_item_perk1 and \
+               instances[i].exotic_class_item_perk2 == instances[j].exotic_class_item_perk2:
+                print("-----------------------------------------")
+                print_eci(instances[i])
+                print_eci(instances[j])
+                print(f"id:{instances[i].instanceId} or id:{instances[j].instanceId}")
+                dupes.append((i,j))
+    return dupes
+
+
 #################################################################################################################################
 
 if __name__ == '__main__':
-    dir, files = files_for_armor_type(ItemSubType.ArmorHelmet)
-    # dir, files = files_for_armor_type(ItemSubType.ArmorClassItem)
+    # dir, files = files_for_armor_type(ItemSubType.ArmorHelmet)
+    dir, files = files_for_armor_type(ItemSubType.ArmorClassItem)
     if len(files) == 0:
         print("No instanced items found!")
         exit(0)
@@ -191,8 +243,13 @@ if __name__ == '__main__':
     instances = extract_instances(dir, files)
 
     duplicates = find_duplicates(instances)
-    # duplicates = find_duplicates(list_of_lists, False)
+    # duplicates = find_duplicates(instances, False)
     print(f"Found {len(duplicates)} duplicates")
     print(duplicates)
 
     save_duplicates_to_file(instances, duplicates, "duplicates.log")
+
+    instances = get_exotic_class_items(instances)
+    duplicates = find_eci_duplicates(instances)
+    print(f"Found {len(duplicates)} duplicates with same exotic perks")
+    print(duplicates)

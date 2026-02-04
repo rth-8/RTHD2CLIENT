@@ -15,7 +15,7 @@ from bungie_api import ComponentCharacter, ComponentItem, ItemSubType, ItemState
 from user_data import UserData
 from character_data import CharacterData
 import pages
-from stats import files_for_armor_type, extract_instances, find_duplicates, save_duplicates_to_file
+from stats import files_for_armor_type, extract_instances, find_duplicates, get_exotic_class_items, find_eci_duplicates, save_duplicates_to_file
 from item_data import get_armor_html
 import local_images
 
@@ -409,7 +409,13 @@ class MyMainWindow(QMainWindow):
             print("No instanced items found!")
             return
         self.inv_instances = extract_instances(dir, files)
-        self.inv_duplicates = find_duplicates(self.inv_instances, self.chb_set.isChecked(), self.chb_archetype.isChecked())
+        if self.rad_stats.isChecked():
+            self.inv_duplicates = find_duplicates(self.inv_instances, self.chb_set.isChecked(), self.chb_archetype.isChecked())
+        elif self.rad_eci_perks.isChecked():
+            self.inv_instances = get_exotic_class_items(self.inv_instances)
+            self.inv_duplicates = find_eci_duplicates(self.inv_instances)
+        else:
+            raise Exception("Unexpected search type!")
         self.statusbar.showMessage(f"Found {len(self.inv_duplicates)} duplicates")
         for dupe in self.inv_duplicates:
             self.lst_result.addItem(f"id:{self.inv_instances[dupe[0]].instanceId} or id:{self.inv_instances[dupe[1]].instanceId}")
