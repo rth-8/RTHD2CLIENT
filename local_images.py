@@ -37,7 +37,7 @@ damage_type_icons = {
 
 def load_local_image(path: str) -> str:
     with open(path, "rb") as file:
-        print(f"Loading local image: {path}")
+        # print(f"Loading local image: {path}")
         raw = file.read()
         data = base64.b64encode(raw).decode("utf-8")
         return data
@@ -54,9 +54,9 @@ def load_local_images():
     global back_button_icon_raw_data
     global shaped_overlay_icon_raw_data
     # Classes
-    class_titan_icon_raw_data = load_local_image("html/class_titan.png")
-    class_hunter_icon_raw_data = load_local_image("html/class_hunter.png")
-    class_warlock_icon_raw_data = load_local_image("html/class_warlock.png")
+    class_titan_icon_raw_data = load_local_image("html/class_titan_black.png")
+    class_hunter_icon_raw_data = load_local_image("html/class_hunter_black.png")
+    class_warlock_icon_raw_data = load_local_image("html/class_warlock_black.png")
     # Stats
     for key in stat_icons.keys():
         raw = load_local_image(stat_icons[key])
