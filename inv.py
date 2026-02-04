@@ -61,6 +61,9 @@ def generate_dict(file, lst, subtype_name, tier="Legendary"):
 
 def generate_constants(items):
     with open("constants.py", 'w') as file:
+        file.write("# This is auto-generated file!\n")
+        file.write("# Any manual changes will be overwritten!\n\n")
+
         print("\nLegendary Armor Pieces:")
         print("----- HELMETS -----")
         helmets = get_armor_subtype(items, 26, "Legendary")

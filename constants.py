@@ -1,3 +1,6 @@
+# This is auto-generated file!
+# Any manual changes will be overwritten!
+
 helmets_legendary = {
      1066619413 : (2, "Ferropotent Cover"),
      1575046822 : (0, "Smoke Jumper Helm"),
@@ -67,6 +70,8 @@ class_items_legendary = {
      2719854935 : (0, "Techsec Mark"),
      2757996223 : (0, "Disaster Corps Mark"),
      2773786868 : (0, "Last Discipline Mark"),
+     2786161293 : (1, "Dreambane Cloak"),
+      293267476 : (1, "Ferropotent Cloak"),
      3408036410 : (0, "Iron Panoply Mark"),
      3591512190 : (0, "Iron Forerunner Mark"),
      4129998876 : (0, "Smoke Jumper Mark"),
