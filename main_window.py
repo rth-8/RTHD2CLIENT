@@ -121,7 +121,8 @@ class MyMainWindow(QMainWindow):
             print(f"NEW URL: {resp_url}")
             self.edit_url.setText(resp_url)
             self.oauth.get_and_store_token(resp_url)
-    
+        print("Done.")
+
 
     def _on_cert_error(self, e):
         print(f"cert error: {e.description()}")
@@ -273,6 +274,7 @@ class MyMainWindow(QMainWindow):
         # self._download(f"{API_ROOT}/Destiny2/{self.userData.membershipType}/Profile/{self.userData.membershipId}/Item/6917530156741587405/?components=300,301,302,303,304,305,306,307,308")
         # self._download(f"{API_ROOT}/Destiny2/Manifest/DestinyInventoryItemDefinition/95722356/")
         # print("----- TEST -----")
+        print("Done.")
 
 
     def _get_character_info(self, chidx, chid):
@@ -549,6 +551,8 @@ class MyMainWindow(QMainWindow):
         self._clear_all_finder_tab()
         # get picked armor type
         aidx = self.cmb_armor_type2.currentIndex()
+        # get picked tier
+        tier = self.cmb_tier.currentIndex()
         print(f"FIND: pattern: {aidx}")
         if aidx == 0:
             # get files from all subfolders
@@ -587,9 +591,13 @@ class MyMainWindow(QMainWindow):
         ptrn.append('1' if self.chb_class.isChecked()   else '0')
         ptrn.append('1' if self.chb_weapons.isChecked() else '0')
         pattern = "".join(ptrn)
+        print(f"Pattern: {pattern}")
         # finds instances matching pattern
         for item in self.inv_instances:
-            if item.pattern == pattern:
+            if tier > 0:
+                if item.pattern == pattern and item.tier == tier:
+                    self.lst_result2.addItem(f"id:{item.instanceId}")
+            elif item.pattern == pattern:
                 self.lst_result2.addItem(f"id:{item.instanceId}")
         print("Done.")
 
