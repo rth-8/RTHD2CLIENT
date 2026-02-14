@@ -27,12 +27,15 @@ gauntlets_legendary = {
      3583853408 : (0, "Iron Companion Gauntlets"),
      4037429988 : (2, "Ferropotent Gloves"),
      4079706495 : (0, "Last Discipline Gauntlets"),
+     4172973116 : (2, "Swordmaster's Gloves"),
       589006711 : (0, "Smoke Jumper Gauntlets"),
 }
 
 chests_legendary = {
      1459620921 : (0, "Last Discipline Plate"),
+     1504698788 : (2, "Swordmaster's Robes"),
      1644825026 : (0, "Wild Anthem Plate"),
+     2134373071 : (2, "Wild Anthem Robes"),
      2199272806 : (0, "Bushido Plate"),
      2401760398 : (0, "Techsec Plate"),
       262826703 : (0, "Swordmaster's Plate"),
@@ -65,6 +68,7 @@ class_items_legendary = {
      1334855187 : (0, "Wild Anthem Mark"),
      1343302889 : (0, "Dreambane Mark"),
      1934339678 : (0, "Swordmaster's Mark"),
+     2248528889 : (2, "Swordmaster's Bond"),
      2517367247 : (0, "Bushido Mark"),
      2676446840 : (0, "Ferropotent Mark"),
      2719854935 : (0, "Techsec Mark"),
@@ -81,6 +85,8 @@ class_items_legendary = {
 helmets_exotic = {
      1978467312 : (0, "Precious Scars"),
      3692827145 : (0, "Eternal Warrior"),
+     3767088557 : (2, "Dawn Chorus"),
+     3781549120 : (2, "Fallen Sunstar"),
      4060352315 : (0, "Mask of the Quiet One"),
      4258262391 : (0, "Loreley Splendor Helm"),
       858758105 : (0, "Khepri's Horn"),
@@ -120,6 +126,7 @@ legs_exotic = {
      3450721096 : (0, "Peregrine Greaves"),
      4119704973 : (0, "The Path of Burning Steps"),
      4136768282 : (2, "Lunafaction Boots"),
+      511709874 : (2, "Rain of Fire"),
        53126580 : (0, "Peacekeepers"),
       597039524 : (2, "Boots of the Assembler"),
        81398002 : (0, "Antaeus Wards"),
