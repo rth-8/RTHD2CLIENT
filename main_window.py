@@ -73,6 +73,7 @@ class MyMainWindow(QMainWindow):
         self.selected_idx2 = -1
 
         if not self.oauth.session.authorized:
+            print("Session NOT authorized.")
             link = self.oauth.start_oauth()
             self.webview.load(QUrl(link))
         else:
@@ -85,7 +86,7 @@ class MyMainWindow(QMainWindow):
                 self.webview.load(QUrl(link))
                 self._get_user_info()
         
-        self.webview.setHtml(pages.get_page_user_info(self.userData, self.charactersDataList))
+            self.webview.setHtml(pages.get_page_user_info(self.userData, self.charactersDataList))
 
 
     def _url_changed(self, url: QUrl):
@@ -119,7 +120,7 @@ class MyMainWindow(QMainWindow):
         elif resp_url.startswith("http"):
             # Show http page
             print(f"NEW URL: {resp_url}")
-            self.edit_url.setText(resp_url)
+            # self.edit_url.setText(resp_url)
             self.oauth.get_and_store_token(resp_url)
         print("Done.")
 

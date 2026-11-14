@@ -8,6 +8,7 @@ TOKEN_URL = "https://www.bungie.net/platform/app/oauth/token/"
 
 class MyOAuth():
     def __init__(self, secrets: MySecrets) -> None:
+        print("MyOAuth __init__")
         self.secrets = secrets
         self.session = None
         self.token = None
@@ -15,6 +16,7 @@ class MyOAuth():
 
 
     def _load_token(self):
+        print("Load token...")
         try:
             with open('token/token.pkl', 'rb') as f:
                 self.token = pickle.load(f)
@@ -38,7 +40,9 @@ class MyOAuth():
 
     def _init(self):
         self._load_token()
-        if self.token:
+        print(f"token = {self.token}")
+        if not self.token:
+            print("OAuth: get token")
             self.session = OAuth2Session(
                 client_id=self.secrets.client_id,
                 token=self.token,
@@ -46,7 +50,9 @@ class MyOAuth():
                 auto_refresh_url=TOKEN_URL,
                 token_updater=self._update_token)
         else:
+            print("OAuth: use saved token")
             self.session = OAuth2Session(client_id=self.secrets.client_id, redirect_uri=REDIRECT_URL)
+            self.session.token = self.token
 
 
     def start_oauth(self):
